@@ -26,6 +26,21 @@ find_package(Qt6 REQUIRED COMPONENTS Gui)
 # Specifies .cpp and .h files to be passed to the compiler
 add_executable(${PROJECT_NAME}
         src/main.cpp
+        mainwindow.h mainwindow.cpp
+
+        shaderloader.h
+        realtime.h realtime.cpp
+        sceneparser.h sceneparser.cpp
+        scenefilereader.h scenefilereader.cpp
+        scenedata.h
+        camera.h camera.cpp
+        settings.h settings.cpp
+        aspectratiowidget.h
+        cone.h cone.cpp
+        sphere.h sphere.cpp
+        cube.h cube.cpp
+        cylinder.h cylinder.cpp
+
         # put other files here, like src/main.cpp
 )
 
