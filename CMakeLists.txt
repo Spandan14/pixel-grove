@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Sets project name
-project(lab11 LANGUAGES CXX C)
+project(pixel-grove LANGUAGES CXX C)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
@@ -25,7 +25,8 @@ find_package(Qt6 REQUIRED COMPONENTS Gui)
 
 # Specifies .cpp and .h files to be passed to the compiler
 add_executable(${PROJECT_NAME}
-  # put other files here, like src/main.cpp
+        src/main.cpp
+        # put other files here, like src/main.cpp
 )
 
 # Specifies other files
