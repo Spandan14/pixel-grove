@@ -25,7 +25,8 @@ find_package(Qt6 REQUIRED COMPONENTS Gui)
 
 # Specifies .cpp and .h files to be passed to the compiler
 add_executable(${PROJECT_NAME}
-  # put other files here, like src/main.cpp
+        src/main.cpp
+        # put other files here, like src/main.cpp
 )
 
 # Specifies other files
