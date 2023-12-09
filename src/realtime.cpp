@@ -69,7 +69,7 @@ void Realtime::finish() {
     this->makeCurrent();
 
     // Students: anything requiring OpenGL calls when the program exits should be done here
-    glDeleteProgram(m_shader);
+    glDeleteProgram(m_skyblock_shader);
     glUseProgram(0);
     this->doneCurrent();
 }
@@ -89,26 +89,31 @@ void Realtime::initializeGL() {
     }
     std::cout << "Initialized GL: Version " << glewGetString(GLEW_VERSION) << std::endl;
 
+    // Students: anything requiring OpenGL calls when the program starts should be done here
+    m_skyblock_shader = ShaderLoader::createShaderProgram("/Users/christinapeng/pixel-grove/resources/shaders/skyblock.vert",
+                                                          "/Users/christinapeng/pixel-grove/resources/shaders/skyblock.frag");
+
     // Allows OpenGL to draw objects appropriately on top of one another
     glEnable(GL_DEPTH_TEST);
     // Tells OpenGL to only draw the front face
     glEnable(GL_CULL_FACE);
+    // Keeps front faces
+    glCullFace(GL_FRONT);
+    // Uses counter clock-wise standard
+    glFrontFace(GL_CCW);
     // Tells OpenGL how big the screen is
     glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
-    // Students: anything requiring OpenGL calls when the program starts should be done here
-    m_skyblock_shader = ShaderLoader::createShaderProgram(":/resources/shaders/skyblock.vert",
-                                                          ":/resources/shaders/skyblock.frag");
-
-    initialized = true;
-
-    cam = new Camera(size().width(), size().height(), sceneData.cameraData);
+    SceneCameraData cameraData;
+    cameraData.look = glm::vec4(0.f, 0.f, -1.f, 0.f);
+    cameraData.pos = glm::vec4(0.f, 0.f, 2.f, 1.f);
+    cameraData.up = glm::vec4(0.f, 1.f, 0.f, 0.f);
+    cam = new Camera(size().width(), size().height(), cameraData);
 
     glUseProgram(m_skyblock_shader);
     GLint skyblockLocation = glGetUniformLocation(m_skyblock_shader, "skybox");
     glUniform1i(skyblockLocation, 0);
     glUseProgram(0);
-
 
     // Create VAO, VBO, and EBO for the skybox
     unsigned int skyboxEBO;
@@ -130,12 +135,12 @@ void Realtime::initializeGL() {
     // All the faces of the cubemap (make sure they are in this exact order)
     std::string facesCubemap[6] =
         {
-            "../resources/images/right.jpg",
-            "../resources/images/left.jpg",
-            "../resources/images/top.jpg",
-            "../resources/images/bottom.jpg",
-            "../resources/images/front.jpg",
-            "../resources/images/back.jpg"
+            "/Users/christinapeng/pixel-grove/resources/images/right.jpg",
+            "/Users/christinapeng/pixel-grove/resources/images/left.jpg",
+            "/Users/christinapeng/pixel-grove/resources/images/top.jpg",
+            "/Users/christinapeng/pixel-grove/resources/images/bottom.jpg",
+            "/Users/christinapeng/pixel-grove/resources/images/front.jpg",
+            "/Users/christinapeng/pixel-grove/resources/images/back.jpg"
         };
 
     // Creates the cubemap texture object
@@ -149,7 +154,7 @@ void Realtime::initializeGL() {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     // This might help with seams on some systems
-    //glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
     // Cycles through all the textures and attaches them to the cubemap object
     for (unsigned int i = 0; i < 6; i++)
@@ -179,64 +184,21 @@ void Realtime::initializeGL() {
             stbi_image_free(data);
         }
     }
-
-
-
-    glUseProgram(m_texture_shader);
-    GLint textureLocation = glGetUniformLocation(m_texture_shader, "myTexture");
-    glUniform1i(textureLocation, 0);
-    glUseProgram(0);
-
-    std::vector<GLfloat> fullscreen_quad_data =
-        { //     POSITIONS    //
-            // Vertex 1 (top left)
-            -1.f,  1.f, 0.0f,
-            0.f, 1.f,
-            //  Vertex 2 (bottom left)
-            -1.f, -1.f, 0.0f,
-            0.f, 0.f,
-            // Vertex 3 (bottom right)
-            1.f, -1.f, 0.0f,
-            1.f, 0.f,
-            // Vertex 4 (top right)
-            1.f,  1.f, 0.0f,
-            1.f, 1.f,
-            // Vertex 5 (top left)
-            -1.f,  1.f, 0.0f,
-            0.f, 1.f,
-            // Vertex 6 (bottom right)
-            1.f, -1.f, 0.0f,
-            1.f, 0.f
-        };
-
-    glGenBuffers(1, &m_fullscreen_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, m_fullscreen_vbo);
-    glBufferData(GL_ARRAY_BUFFER, fullscreen_quad_data.size()*sizeof(GLfloat), fullscreen_quad_data.data(), GL_STATIC_DRAW);
-    glGenVertexArrays(1, &m_fullscreen_vao);
-    glBindVertexArray(m_fullscreen_vao);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), nullptr);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), reinterpret_cast<void*>(3 * sizeof(GLfloat)));
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    initialized = true;
 }
 
 void Realtime::paintGL() {
     // Students: anything requiring OpenGL calls every frame should be done here
-    glUseProgram(m_shader);
 
     glDepthFunc(GL_LEQUAL);
 
     glUseProgram(m_skyblock_shader);
-    glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 projection = glm::mat4(1.0f);
+    //glm::mat4 view = glm::mat4(1.0f);
+    //glm::mat4 projection = glm::mat4(1.0f);
     // We make the mat4 into a mat3 and then a mat4 again in order to get rid of the last row and column
     // The last row and column affect the translation of the skybox (which we don't want to affect)
-    view = cam->getViewMatrix();
-    projection = cam->getProjectionMatrix();
+    glm::mat4 view = glm::mat4(glm::mat3(cam->getViewMatrix()));
+    glm::mat4 projection = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "view"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "projection"), 1, GL_FALSE, &projection[0][0]);
 
@@ -275,8 +237,6 @@ void Realtime::settingsChanged() {
         update(); // asks for a PaintGL() call to occur
     }
 }
-
-// ---------Initialize Shape Functions (VBO / VAO Binding)---------
 
 // ================== Project 6: Action!
 
