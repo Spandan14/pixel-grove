@@ -25,30 +25,30 @@ find_package(Qt6 REQUIRED COMPONENTS Gui)
 
 # Specifies .cpp and .h files to be passed to the compiler
 add_executable(${PROJECT_NAME}
-      src/main.cpp
+  src/main.cpp
 
-      src/realtime.cpp
-      src/mainwindow.cpp
-      src/settings.cpp
-      src/utils/scenefilereader.cpp
-      src/utils/sceneparser.cpp
+  src/realtime.cpp
+  src/mainwindow.cpp
+  src/settings.cpp
+  src/utils/scenefilereader.cpp
+  src/utils/sceneparser.cpp
 
-      src/mainwindow.h
-      src/realtime.h
-      src/settings.h
-      src/utils/scenedata.h
-      src/utils/scenefilereader.h
-      src/utils/sceneparser.h
-      src/utils/shaderloader.h
-      src/utils/aspectratiowidget/aspectratiowidget.hpp
+  src/mainwindow.h
+  src/realtime.h
+  src/settings.h
+  src/utils/scenedata.h
+  src/utils/scenefilereader.h
+  src/utils/sceneparser.h
+  src/utils/shaderloader.h
+  src/utils/aspectratiowidget/aspectratiowidget.hpp
 
-    src/utils/scenedata.h
-    src/settings.h
-    src/settings.cpp
-    stb_image.h
-    resources/shaders/skyblock.vert
-    resources/shaders/skyblock.frag
+  src/utils/scenedata.h
+  src/settings.h
+  src/settings.cpp
+  stb_image.h
 
+  src/camera/camera.h
+  src/camera/camera.cpp
 )
 
 # Specifies other files
@@ -56,7 +56,16 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   PREFIX
   "/"
   FILES
+  resources/images/back.jpg
+  resources/images/front.jpg
+  resources/images/left.jpg
+  resources/images/right.jpg
+  resources/images/top.jpg
+  resources/images/bottom.jpg
   resources/images/kitten.png
+  resources/shaders/skyblock.frag
+  resources/shaders/skyblock.vert
+
 )
 
 # GLEW: this creates its library and allows you to `#include "GL/glew.h"`
