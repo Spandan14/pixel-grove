@@ -57,10 +57,79 @@ void Realtime::initializeGL() {
     glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
     // Students: anything requiring OpenGL calls when the program starts should be done here
+    setupTerrain();
+}
+
+void Realtime::setupTerrain() {
+    glClearColor(0, 0, 0, 1);
+    m_program = new QOpenGLShaderProgram;
+    std::cout << QDir::currentPath().toStdString() << std::endl;
+    m_program->addShaderFromSourceFile(QOpenGLShader::Vertex,":/resources/shader/vertex.vert");
+    m_program->addShaderFromSourceFile(QOpenGLShader::Fragment,":/resources/shader/fragment.frag");
+    m_program->link();
+    m_program->bind();
+
+    m_texture_shader = ShaderLoader::createShaderProgram(":/resources/shaders/texture.vert",
+                                                         ":/resources/shaders/texture.frag");
+
+    m_projMatrixLoc = m_program->uniformLocation("projMatrix");
+    m_mvMatrixLoc = m_program->uniformLocation("mvMatrix");
+
+    m_terrainVao.create();
+    m_terrainVao.bind();
+
+    std::vector<GLfloat> verts = m_terrain.generateTerrain();
+
+    m_terrainVbo.create();
+    m_terrainVbo.bind();
+    m_terrainVbo.allocate(verts.data(),verts.size()*sizeof(GLfloat));
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+                          nullptr);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+                          reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+                          reinterpret_cast<void *>(6 * sizeof(GLfloat)));
+
+    m_terrainVbo.release();
+
+    m_world.setToIdentity();
+    m_world.translate(QVector3D(-0.5,-0.5,0));
+
+
+    m_camera.setToIdentity();
+    m_camera.lookAt(QVector3D(1,1,1),QVector3D(0,0,0),QVector3D(0,0,1));
+
+    m_program->release();
+}
+
+void Realtime::paintTerrain() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
+    m_program->bind();
+    m_program->setUniformValue(m_projMatrixLoc, m_proj);
+    m_program->setUniformValue(m_mvMatrixLoc, m_camera * m_world);
+    m_program->setUniformValue(m_program->uniformLocation("wireshade"),m_terrain.m_wireshade);
+
+    int res = m_terrain.getResolution();
+
+
+    glPolygonMode(GL_FRONT_AND_BACK,m_terrain.m_wireshade? GL_LINE : GL_FILL);
+    glDrawArrays(GL_TRIANGLES, 0, res * res * 6);
+
+    m_program->release();
 }
 
 void Realtime::paintGL() {
     // Students: anything requiring OpenGL calls every frame should be done here
+    paintTerrain();
 }
 
 void Realtime::resizeGL(int w, int h) {
