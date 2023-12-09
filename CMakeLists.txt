@@ -42,6 +42,13 @@ add_executable(${PROJECT_NAME}
       src/utils/shaderloader.h
       src/utils/aspectratiowidget/aspectratiowidget.hpp
 
+    src/utils/scenedata.h
+    src/settings.h
+    src/settings.cpp
+    stb_image.h
+    resources/shaders/skyblock.vert
+    resources/shaders/skyblock.frag
+
 )
 
 # Specifies other files

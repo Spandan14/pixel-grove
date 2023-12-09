@@ -1,6 +1,8 @@
 #pragma once
 
 // Defined before including GLEW to suppress deprecation messages on macOS
+#include "src/utils/scenedata.h"
+#include "src/utils/sceneparser.h"
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #endif
@@ -49,4 +51,76 @@ private:
 
     // Device Correction Variables
     int m_devicePixelRatio;
+
+    //OpenGL Variables
+    GLuint m_sphere_vbo;
+    GLuint m_sphere_vao;
+    GLuint m_cube_vbo;
+    GLuint m_cube_vao;
+    GLuint m_cone_vbo;
+    GLuint m_cone_vao;
+    GLuint m_cylinder_vbo;
+    GLuint m_cylinder_vao;
+
+    void initializeShape(PrimitiveType shape);
+    void initializeSphere();
+    void updateSphereVBO();
+    void initializeCube();
+    void updateCubeVBO();
+    void initializeCone();
+    void updateConeVBO();
+    void initializeCylinder();
+    void updateCylinderVBO();
+    RenderData sceneData;
+    Camera* cam;
+    GLuint m_shader;
+    GLuint m_texture_shader;
+    GLuint m_skyblock_shader;
+    glm::mat4 m_cylinder_model;
+    glm::mat3 m_cylinder_inverseCTM;
+    glm::mat4 m_cone_model;
+    glm::mat3 m_cone_inverseCTM;
+    glm::mat4 m_cube_model;
+    glm::mat3 m_cube_inverseCTM;
+    glm::mat4 m_sphere_model;
+    glm::mat3 m_sphere_inverseCTM;
+    glm::mat4 m_view;
+    glm::mat4 m_proj;
+    float m_ka;
+    float m_kd;
+    float m_ks;
+    float m_shininess;
+    glm::vec4 m_lightPos;
+
+    std::vector<GLfloat> sphereData;
+    std::vector<GLfloat> cubeData;
+    std::vector<GLfloat> cylinderData;
+    std::vector<GLfloat> coneData;
+    glm::vec4 ambientColor;
+    glm::vec4 diffuseColor;
+    glm::vec4 specularColor;
+    bool initialized = false;
+
+    int lightTypeToNum(LightType light_type);
+    void passLightUniforms();
+    void passSceneUniforms();
+
+    void makeFBO();
+    void paintTexture(GLuint texture, bool perPixel, bool kernelBased);
+    GLuint m_fbo_texture;
+    GLuint m_fbo_renderbuffer;
+    GLuint m_fbo;
+    GLuint m_defaultFBO;
+    int m_fbo_width;
+    int m_fbo_height;
+    int m_screen_width;
+    int m_screen_height;
+
+    GLuint m_fullscreen_vbo;
+    GLuint m_fullscreen_vao;
+
+    int loadCubemap(std::vector<std::string> faces);
+    GLuint skyboxVAO;
+    GLuint skyboxVBO;
+    GLuint cubemapTexture;
 };
