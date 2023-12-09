@@ -1,9 +1,13 @@
 #pragma once
 
-#include "GL/glew.h"
+// Defined before including GLEW to suppress deprecation messages on macOS
+#ifdef __APPLE__
+#define GL_SILENCE_DEPRECATION
+#endif
+#include <GL/glew.h>
 #include <QFile>
-#include <iostream>
 #include <QTextStream>
+#include <iostream>
 
 class ShaderLoader{
 public:
