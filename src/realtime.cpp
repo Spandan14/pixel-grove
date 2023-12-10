@@ -87,6 +87,7 @@ void Realtime::initializeGL() {
     std::cout << "Initialized GL: Version " << glewGetString(GLEW_VERSION) << std::endl;
 
     // Students: anything requiring OpenGL calls when the program starts should be done here
+
     m_skyblock_shader = ShaderLoader::createShaderProgram("resources/shaders/skyblock.vert",
                                                           "resources/shaders/skyblock.frag");
 

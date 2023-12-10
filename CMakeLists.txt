@@ -26,36 +26,31 @@ find_package(Qt6 REQUIRED COMPONENTS Gui)
 # Specifies .cpp and .h files to be passed to the compiler
 add_executable(${PROJECT_NAME}
 
-  src/main.cpp
+    src/flowergen/flowers.h
+    src/flowergen/rose.h src/flowergen/rose.cpp
+    src/flowergen/tulip.h src/flowergen/tulip.cpp
+    src/flowergen/sunflower.h src/flowergen/sunflower.cpp
+    src/flowergen/lily.h src/flowergen/lily.cpp
+    src/utils/mesh.h src/utils/mesh.cpp
+      src/main.cpp
+      src/realtime.cpp
+      src/mainwindow.cpp
+      src/settings.cpp
+      src/utils/scenefilereader.cpp
+      src/utils/sceneparser.cpp
+      src/mainwindow.h
+      src/realtime.h
+      src/settings.h
+      src/utils/scenedata.h
+      src/utils/scenefilereader.h
+      src/utils/sceneparser.h
+      src/utils/shaderloader.h
+      src/utils/aspectratiowidget/aspectratiowidget.hpp
 
-  src/realtime.cpp
-  src/mainwindow.cpp
-  src/settings.cpp
-  src/utils/scenefilereader.cpp
-  src/utils/sceneparser.cpp
-
-        src/flowergen/flowers.h
-        src/flowergen/rose.h src/flowergen/rose.cpp
-        src/flowergen/tulip.h src/flowergen/tulip.cpp
-        src/flowergen/sunflower.h src/flowergen/sunflower.cpp
-        src/flowergen/lily.h src/flowergen/lily.cpp
-        src/utils/mesh.h src/utils/mesh.cpp
-
-
-
-  src/mainwindow.h
-  src/realtime.h
-  src/settings.h
-  src/utils/scenedata.h
-  src/utils/scenefilereader.h
-  src/utils/sceneparser.h
-  src/utils/shaderloader.h
-  src/utils/aspectratiowidget/aspectratiowidget.hpp
-
-  src/utils/scenedata.h
-  src/settings.h
-  src/settings.cpp
-  stb_image.h
+      src/utils/scenedata.h
+      src/settings.h
+      src/settings.cpp
+      stb_image.h
 
   src/camera/camera.h
   src/camera/camera.cpp

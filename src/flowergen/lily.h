@@ -3,7 +3,7 @@
 
 
 #include "src/flowergen/flowers.h"
-class lily : public Flower
+class lily
 {
 public:
     lily();
