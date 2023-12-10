@@ -26,6 +26,15 @@ find_package(Qt6 REQUIRED COMPONENTS Gui)
 # Specifies .cpp and .h files to be passed to the compiler
 add_executable(${PROJECT_NAME}
         src/main.cpp
+        src/flowergen/flowers.h
+
+        src/flowergen/rose.h src/flowergen/rose.cpp
+        src/flowergen/tulip.h src/flowergen/tulip.cpp
+        src/flowergen/sunflower.h src/flowergen/sunflower.cpp
+        src/flowergen/lily.h src/flowergen/lily.cpp
+        src/utils/mesh.h src/utils/mesh.cpp
+
+
         # put other files here, like src/main.cpp
 )
 
@@ -42,7 +51,9 @@ qt_add_resources(${PROJECT_NAME} "Resources"
 )
 
 # GLEW: this creates its library and allows you to `#include "GL/glew.h"`
-add_library(StaticGLEW STATIC glew/src/glew.c)
+add_library(StaticGLEW STATIC glew/src/glew.c
+
+)
 include_directories(${PROJECT_NAME} PRIVATE glew/include)
 
 # Specifies libraries to be linked (Qt components, glew, etc)
