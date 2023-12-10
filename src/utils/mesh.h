@@ -13,15 +13,15 @@ class Mesh
 public:
     Mesh(const char* filepath);
 
-    bool loadMesh();
-
     GLuint getVAO();
+
+    void freeMesh();
 
 
 
 private:
     void bindMesh();
-
+    bool loadMesh();
     const char* filepath;
     std::vector<float> m_mesh;
     GLuint m_vbo;
