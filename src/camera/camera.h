@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "scenedata.h"
+#include "src/utils/scenedata.h"
 #include <QCoreApplication>
 #include <QMouseEvent>
 #include <QKeyEvent>

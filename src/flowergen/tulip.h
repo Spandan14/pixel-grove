@@ -7,10 +7,6 @@ class tulip : public Flower
 {
 public:
     tulip();
-    void genFlowers() override;
-    std::vector<GLuint> getVAOs() override;
-    void loadFlower() override;
-    void loadLeaf() override;
 private:
     std::vector<GLuint> m_vaos;
     std::vector<GLuint> m_vbos;

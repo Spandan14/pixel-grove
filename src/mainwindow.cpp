@@ -64,10 +64,6 @@ void MainWindow::initialize() {
     filter2->setText(QStringLiteral("Kernel-Based Filter"));
     filter2->setChecked(false);
 
-    // Create file uploader for scene file
-    uploadFile = new QPushButton();
-    uploadFile->setText(QStringLiteral("Upload Scene File"));
-
     saveImage = new QPushButton();
     saveImage->setText(QStringLiteral("Save image"));
 
@@ -188,7 +184,6 @@ void MainWindow::initialize() {
     ec4->setText(QStringLiteral("Extra Credit 4"));
     ec4->setChecked(false);
 
-    vLayout->addWidget(uploadFile);
     vLayout->addWidget(saveImage);
     vLayout->addWidget(scene_label);
     vLayout->addWidget(time_of_day_label);
@@ -233,7 +228,6 @@ void MainWindow::finish() {
 void MainWindow::connectUIElements() {
     connectPerPixelFilter();
     connectKernelBasedFilter();
-    connectUploadFile();
     connectSaveImage();
     connectTimeOfDay();
     connectParam1();
@@ -249,10 +243,6 @@ void MainWindow::connectPerPixelFilter() {
 
 void MainWindow::connectKernelBasedFilter() {
     connect(filter2, &QCheckBox::clicked, this, &MainWindow::onKernelBasedFilter);
-}
-
-void MainWindow::connectUploadFile() {
-    connect(uploadFile, &QPushButton::clicked, this, &MainWindow::onUploadFile);
 }
 
 void MainWindow::connectSaveImage() {
@@ -304,28 +294,6 @@ void MainWindow::onPerPixelFilter() {
 void MainWindow::onKernelBasedFilter() {
     settings.kernelBasedFilter = !settings.kernelBasedFilter;
     realtime->settingsChanged();
-}
-
-void MainWindow::onUploadFile() {
-    // Get abs path of scene file
-    QString configFilePath = QFileDialog::getOpenFileName(this, tr("Upload File"),
-                                                          QDir::currentPath()
-                                                              .append(QDir::separator())
-                                                              .append("scenefiles")
-                                                              .append(QDir::separator())
-                                                              .append("lights-camera")
-                                                              .append(QDir::separator())
-                                                              .append("required"), tr("Scene Files (*.json)"));
-    if (configFilePath.isNull()) {
-        std::cout << "Failed to load null scenefile." << std::endl;
-        return;
-    }
-
-    settings.sceneFilePath = configFilePath.toStdString();
-
-    std::cout << "Loaded scenefile: \"" << configFilePath.toStdString() << "\"." << std::endl;
-
-    realtime->sceneChanged();
 }
 
 void MainWindow::onSaveImage() {
