@@ -72,7 +72,6 @@ private:
     GLuint m_fullscreen_vbo;
     GLuint m_fullscreen_vao;
 
-    int loadCubemap(std::vector<std::string> faces);
     GLuint skyboxVAO;
     GLuint skyboxVBO;
     GLuint cubemapTexture;
