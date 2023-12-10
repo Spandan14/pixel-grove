@@ -90,8 +90,8 @@ void Realtime::initializeGL() {
     std::cout << "Initialized GL: Version " << glewGetString(GLEW_VERSION) << std::endl;
 
     // Students: anything requiring OpenGL calls when the program starts should be done here
-    m_skyblock_shader = ShaderLoader::createShaderProgram("/Users/christinapeng/pixel-grove/resources/shaders/skyblock.vert",
-                                                          "/Users/christinapeng/pixel-grove/resources/shaders/skyblock.frag");
+    m_skyblock_shader = ShaderLoader::createShaderProgram("resources/shaders/skyblock.vert",
+                                                          "resources/shaders/skyblock.frag");
 
     // Allows OpenGL to draw objects appropriately on top of one another
     glEnable(GL_DEPTH_TEST);
@@ -137,12 +137,12 @@ void Realtime::initializeGL() {
     // All the faces of the cubemap (make sure they are in this exact order)
     std::string facesCubemap[6] =
         {
-            "/Users/christinapeng/pixel-grove/resources/images/right.jpg",
-            "/Users/christinapeng/pixel-grove/resources/images/left.jpg",
-            "/Users/christinapeng/pixel-grove/resources/images/top.jpg",
-            "/Users/christinapeng/pixel-grove/resources/images/bottom.jpg",
-            "/Users/christinapeng/pixel-grove/resources/images/front.jpg",
-            "/Users/christinapeng/pixel-grove/resources/images/back.jpg"
+            "resources/images/right.jpg",
+            "resources/images/left.jpg",
+            "resources/images/top.jpg",
+            "resources/images/bottom.jpg",
+            "resources/images/front.jpg",
+            "resources/images/back.jpg"
         };
 
     // Creates the cubemap texture object
