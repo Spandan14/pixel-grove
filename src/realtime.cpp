@@ -14,14 +14,13 @@
 
 float skyboxVertices[] =
     {
-        //   Coordinates
-        -1.0f, -1.0f,  1.0f,//        7--------6
-        1.0f, -1.0f,  1.0f,//       /|       /|
-        1.0f, -1.0f, -1.0f,//      4--------5 |
-        -1.0f, -1.0f, -1.0f,//      | |      | |
-        -1.0f,  1.0f,  1.0f,//      | 3------|-2
-        1.0f,  1.0f,  1.0f,//      |/       |/
-        1.0f,  1.0f, -1.0f,//      0--------1
+        -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f, -1.0f,
         -1.0f,  1.0f, -1.0f
 };
 
@@ -60,8 +59,6 @@ Realtime::Realtime(QWidget *parent)
     m_keyMap[Qt::Key_D]       = false;
     m_keyMap[Qt::Key_Control] = false;
     m_keyMap[Qt::Key_Space]   = false;
-
-    // If you must use this function, do not edit anything above this
 }
 
 void Realtime::finish() {
@@ -90,8 +87,9 @@ void Realtime::initializeGL() {
     std::cout << "Initialized GL: Version " << glewGetString(GLEW_VERSION) << std::endl;
 
     // Students: anything requiring OpenGL calls when the program starts should be done here
-    m_skyblock_shader = ShaderLoader::createShaderProgram(":/resources/shaders/skyblock.vert",
-                                                          ":/resources/shaders/skyblock.frag");
+
+    m_skyblock_shader = ShaderLoader::createShaderProgram("resources/shaders/skyblock.vert",
+                                                          "resources/shaders/skyblock.frag");
 
     // Allows OpenGL to draw objects appropriately on top of one another
     glEnable(GL_DEPTH_TEST);
@@ -101,15 +99,17 @@ void Realtime::initializeGL() {
     glCullFace(GL_FRONT);
     // Uses counter clock-wise standard
     glFrontFace(GL_CCW);
+    // Tells OpenGL how big the screen is
+    glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
     SceneCameraData cameraData;
     cameraData.look = glm::vec4(0.f, 0.f, -1.f, 0.f);
     cameraData.pos = glm::vec4(0.f, 0.f, 2.f, 1.f);
     cameraData.up = glm::vec4(0.f, 1.f, 0.f, 0.f);
+    cameraData.heightAngle = 45.f;
+    cameraData.aperture = 0.f;
+    cameraData.focalLength = 30.f;
     cam = new Camera(size().width(), size().height(), cameraData);
-
-    // Tells OpenGL how big the screen is
-    glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
     glUseProgram(m_skyblock_shader);
     GLint skyblockLocation = glGetUniformLocation(m_skyblock_shader, "skybox");
@@ -132,7 +132,6 @@ void Realtime::initializeGL() {
     glBindVertexArray(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    // All the faces of the cubemap (make sure they are in this exact order)
     std::string facesCubemap[6] =
         {
             "resources/images/right.jpg",
@@ -143,20 +142,15 @@ void Realtime::initializeGL() {
             "resources/images/back.jpg"
         };
 
-    // Creates the cubemap texture object
-
     glGenTextures(1, &cubemapTexture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    // These are very important to prevent seams
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    // This might help with seams on some systems
-    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); //optional
 
-    // Cycles through all the textures and attaches them to the cubemap object
     for (unsigned int i = 0; i < 6; i++)
     {
         int width, height, nrChannels;
@@ -188,35 +182,27 @@ void Realtime::initializeGL() {
 }
 
 void Realtime::paintGL() {
-    // Students: anything requiring OpenGL calls every frame should be done here
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthFunc(GL_LEQUAL);
 
     glUseProgram(m_skyblock_shader);
-    //glm::mat4 view = glm::mat4(1.0f);
-    //glm::mat4 projection = glm::mat4(1.0f);
-    // We make the mat4 into a mat3 and then a mat4 again in order to get rid of the last row and column
-    // The last row and column affect the translation of the skybox (which we don't want to affect)
-
     glm::mat4 view = glm::mat4(glm::mat3(cam->getViewMatrix()));
     glm::mat4 projection = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "view"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "projection"), 1, GL_FALSE, &projection[0][0]);
 
-    // Draws the cubemap as the last object so we can save a bit of performance by discarding all fragments
-    // where an object is present (a depth of 1.0f will always fail against any object's depth value)
     glBindVertexArray(skyboxVAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
-    // Switch back to the normal depth function
     glDepthFunc(GL_LESS);
 }
 
 void Realtime::resizeGL(int w, int h) {
     // Tells OpenGL how big the screen is
+
     glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
     // Students: anything requiring OpenGL calls when the program starts should be done here
