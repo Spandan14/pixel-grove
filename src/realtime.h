@@ -75,4 +75,5 @@ private:
     GLuint skyboxVAO;
     GLuint skyboxVBO;
     GLuint cubemapTexture;
+    unsigned int loadCubemap(std::vector<std::string> faces);
 };

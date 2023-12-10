@@ -101,15 +101,17 @@ void Realtime::initializeGL() {
     glCullFace(GL_FRONT);
     // Uses counter clock-wise standard
     glFrontFace(GL_CCW);
+    // Tells OpenGL how big the screen is
+    glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
     SceneCameraData cameraData;
     cameraData.look = glm::vec4(0.f, 0.f, -1.f, 0.f);
     cameraData.pos = glm::vec4(0.f, 0.f, 2.f, 1.f);
     cameraData.up = glm::vec4(0.f, 1.f, 0.f, 0.f);
+    cameraData.heightAngle = 45.f;
+    cameraData.aperture = 0.f;
+    cameraData.focalLength = 30.f;
     cam = new Camera(size().width(), size().height(), cameraData);
-
-    // Tells OpenGL how big the screen is
-    glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
     glUseProgram(m_skyblock_shader);
     GLint skyblockLocation = glGetUniformLocation(m_skyblock_shader, "skybox");
@@ -197,7 +199,6 @@ void Realtime::paintGL() {
     //glm::mat4 projection = glm::mat4(1.0f);
     // We make the mat4 into a mat3 and then a mat4 again in order to get rid of the last row and column
     // The last row and column affect the translation of the skybox (which we don't want to affect)
-
     glm::mat4 view = glm::mat4(glm::mat3(cam->getViewMatrix()));
     glm::mat4 projection = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "view"), 1, GL_FALSE, &view[0][0]);
@@ -217,6 +218,7 @@ void Realtime::paintGL() {
 
 void Realtime::resizeGL(int w, int h) {
     // Tells OpenGL how big the screen is
+
     glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
     // Students: anything requiring OpenGL calls when the program starts should be done here
