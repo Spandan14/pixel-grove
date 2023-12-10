@@ -70,6 +70,7 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   resources/images/kitten.png
   resources/shaders/skyblock.frag
   resources/shaders/skyblock.vert
+  resources/assets/tulip.obj
 
 )
 
