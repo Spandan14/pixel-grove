@@ -4,6 +4,7 @@
 #include "src/utils/scenedata.h"
 #include "src/utils/sceneparser.h"
 #include "src/camera/camera.h"
+#include "src/utils/mesh.h"
 
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
@@ -76,4 +77,6 @@ private:
     GLuint skyboxVBO;
     GLuint cubemapTexture;
     unsigned int loadCubemap(std::vector<std::string> faces);
+    Mesh *tulip;
+    int lightTypeToNum(LightType light_type);
 };

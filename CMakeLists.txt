@@ -54,6 +54,7 @@ add_executable(${PROJECT_NAME}
 
   src/camera/camera.h
   src/camera/camera.cpp
+
 )
 
 # Specifies other files
@@ -72,6 +73,12 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   resources/shaders/skyblock.vert
   resources/assets/tulip.obj
 
+)
+
+target_sources(pixel-grove_other_files
+  PRIVATE
+    resources/shaders/phong.frag
+    resources/shaders/phong.vert
 )
 
 # GLEW: this creates its library and allows you to `#include "GL/glew.h"`

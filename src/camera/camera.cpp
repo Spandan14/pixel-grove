@@ -133,6 +133,10 @@ glm::mat4 Camera::getInverseViewMatrix() const {
     return glm::inverse(getViewMatrix());
 }
 
+glm::vec4 Camera::getCameraPos(){
+    return this->camera_pos;
+}
+
 float Camera::getAspectRatio() const {
     return ((float)camera_width / camera_height);
 }

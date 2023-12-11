@@ -16,7 +16,7 @@ public:
     GLuint getVAO();
 
     void freeMesh();
-
+    void drawMesh();
 
 
 private:
