@@ -35,6 +35,7 @@ TerrainGenerator::~TerrainGenerator()
 
 // Helper for generateTerrain()
 void addPointToVector(glm::vec3 point, std::vector<float>& vector) {
+    // slightly sussy hack to orient terrain in +y
     vector.push_back(point.y);
     vector.push_back(point.z);
     vector.push_back(point.x);

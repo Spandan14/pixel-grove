@@ -141,10 +141,6 @@ float Camera::getHeightAngle() const {
     return this->sc_data.heightAngle;
 }
 
-float Camera::getFocalLength() const {
-    return this->sc_data.focalLength;
-}
-
-float Camera::getAperture() const {
-    return this->sc_data.aperture;
+glm::vec4 Camera::getWorldSpaceLook() const {
+    return camera_look;
 }

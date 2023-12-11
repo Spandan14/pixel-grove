@@ -6,16 +6,11 @@
 struct Settings {
     std::string sceneFilePath;
     int timeOfDay = 0;
-    int shapeParameter1 = 1;
+    int terrainResolution = 100;
     int shapeParameter2 = 1;
     float nearPlane = 1;
     float farPlane = 1;
-    bool perPixelFilter = false;
-    bool kernelBasedFilter = false;
-    bool extraCredit1 = false;
-    bool extraCredit2 = false;
-    bool extraCredit3 = false;
-    bool extraCredit4 = false;
+    bool terrainWireframe = false;
 };
 
 

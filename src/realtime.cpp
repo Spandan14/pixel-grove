@@ -59,22 +59,14 @@ void Realtime::initializeGL() {
     // Tells OpenGL how big the screen is
     glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
+    initialized = true;
+
     // Students: anything requiring OpenGL calls when the program starts should be done here
     setupCamera();
     setupTerrain();
 }
 
 void Realtime::setupCamera() {
-
-//
-//    // these might be fucked lowkey, TODO check
-      m_world = glm::mat4(1.0f);
-      m_world = glm::translate(m_world, glm::vec3(-0.5f, -0.5f, 0.0f));
-//    m_camera = glm::lookAt(glm::vec3(1, 1, 1), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
-//
-//    m_proj = glm::mat4(1.0f);
-//    m_proj = glm::perspective(45.0f, GLfloat(size().width()) / size().height(), 0.01f, 100.0f);
-
     SceneCameraData initialData{};
     initialData.pos = glm::vec4(1.f, 1.f, 1.f, 1.f);
     initialData.look = glm::vec4(-1.f, -1.f, -1.f, 0.f);
@@ -131,13 +123,20 @@ void Realtime::paintTerrain() {
     glUniformMatrix4fv(m_proj_matrix_loc, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
     glm::mat4 mv_matrix = m_camera.getViewMatrix();
     glUniformMatrix4fv(m_mv_matrix_loc, 1, GL_FALSE, &mv_matrix[0][0]);
-    glUniform1i(glGetUniformLocation(m_terrain_shader, "wireshade"), settings.kernelBasedFilter);
+    glUniform1i(glGetUniformLocation(m_terrain_shader, "wireshade"), settings.terrainWireframe);
+//    glm::vec3 look = glm::vec3(m_camera.getWorldSpaceLook());
+//    glm::vec3 lightDir = glm::reflect(look, glm::vec3(0.f, 1.f, 0.f));
+//
+
+    float lightAngle = settings.timeOfDay * 2 * M_PI / 24.f;
+    glm::vec3 lightDir = glm::vec3(0.f, glm::sin(lightAngle), glm::cos(lightAngle));
+    glUniform3fv(glGetUniformLocation(m_terrain_shader, "lightDir"), 1, &lightDir[0]);
 
     int res = m_terrain.getResolution();
 
     glBindVertexArray(m_terrain_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_terrain_vbo);
-    glPolygonMode(GL_FRONT_AND_BACK, settings.kernelBasedFilter ? GL_LINE : GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, settings.terrainWireframe ? GL_LINE : GL_FILL);
     glDrawArrays(GL_TRIANGLES, 0, res * res * 6);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -164,6 +163,9 @@ void Realtime::sceneChanged() {
 
 void Realtime::settingsChanged() {
 
+    m_terrain.setResolution(settings.terrainResolution);
+    if (initialized)
+        setupTerrain();
     update(); // asks for a PaintGL() call to occur
 }
 

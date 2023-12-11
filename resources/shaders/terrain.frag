@@ -2,9 +2,9 @@
 in vec4 vert;
 in vec4 norm;
 in vec3 color;
-in vec3 lightDir;
 
 uniform bool wireshade;
+uniform vec3 lightDir;
 
 out vec4 fragColor;
 

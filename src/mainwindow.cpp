@@ -53,16 +53,10 @@ void MainWindow::initialize() {
     far_label->setText("Far Plane:");
 
 
-
-    // Create checkbox for per-pixel filter
-    filter1 = new QCheckBox();
-    filter1->setText(QStringLiteral("Per-Pixel Filter"));
-    filter1->setChecked(false);
-
     // Create checkbox for kernel-based filter
-    filter2 = new QCheckBox();
-    filter2->setText(QStringLiteral("Kernel-Based Filter"));
-    filter2->setChecked(false);
+    terrainWireframeBox = new QCheckBox();
+    terrainWireframeBox->setText(QStringLiteral("Terrain Wireframe Shading"));
+    terrainWireframeBox->setChecked(false);
 
     saveImage = new QPushButton();
     saveImage->setText(QStringLiteral("Save image"));
@@ -80,52 +74,36 @@ void MainWindow::initialize() {
     timeSlider = new QSlider(Qt::Orientation::Horizontal);
     timeSlider->setTickInterval(1);
     timeSlider->setMinimum(1);
-    timeSlider->setMaximum(25);
+    timeSlider->setMaximum(24);
     timeSlider->setValue(1);
 
     timeBox = new QSpinBox();
     timeBox->setMinimum(1);
-    timeBox->setMaximum(25);
+    timeBox->setMaximum(24);
     timeBox->setSingleStep(1);
     timeBox->setValue(1);
 
 
-    p1Slider = new QSlider(Qt::Orientation::Horizontal); // Parameter 1 slider
-    p1Slider->setTickInterval(1);
-    p1Slider->setMinimum(1);
-    p1Slider->setMaximum(25);
-    p1Slider->setValue(1);
+    terrainResolutionSlider = new QSlider(Qt::Orientation::Horizontal); // Parameter 1 slider
+    terrainResolutionSlider->setTickInterval(1);
+    terrainResolutionSlider->setMinimum(5);
+    terrainResolutionSlider->setMaximum(250);
+    terrainResolutionSlider->setValue(100);
 
-    p1Box = new QSpinBox();
-    p1Box->setMinimum(1);
-    p1Box->setMaximum(25);
-    p1Box->setSingleStep(1);
-    p1Box->setValue(1);
-
-    p2Slider = new QSlider(Qt::Orientation::Horizontal); // Parameter 2 slider
-    p2Slider->setTickInterval(1);
-    p2Slider->setMinimum(1);
-    p2Slider->setMaximum(25);
-    p2Slider->setValue(1);
-
-    p2Box = new QSpinBox();
-    p2Box->setMinimum(1);
-    p2Box->setMaximum(25);
-    p2Box->setSingleStep(1);
-    p2Box->setValue(1);
+    terrainResolutionBox = new QSpinBox();
+    terrainResolutionBox->setMinimum(5);
+    terrainResolutionBox->setMaximum(250);
+    terrainResolutionBox->setSingleStep(1);
+    terrainResolutionBox->setValue(100);
 
     // Adds the slider and number box to the parameter layouts
     l0->addWidget(timeSlider);
     l0->addWidget(timeBox);
     timeLayout->setLayout(l0);
 
-    l1->addWidget(p1Slider);
-    l1->addWidget(p1Box);
+    l1->addWidget(terrainResolutionSlider);
+    l1->addWidget(terrainResolutionBox);
     p1Layout->setLayout(l1);
-
-    l2->addWidget(p2Slider);
-    l2->addWidget(p2Box);
-    p2Layout->setLayout(l2);
 
     // Creates the boxes containing the camera sliders and number boxes
     QGroupBox *nearLayout = new QGroupBox(); // horizonal near slider alignment
@@ -167,23 +145,6 @@ void MainWindow::initialize() {
     lfar->addWidget(farBox);
     farLayout->setLayout(lfar);
 
-    // Extra Credit:
-    ec1 = new QCheckBox();
-    ec1->setText(QStringLiteral("Extra Credit 1"));
-    ec1->setChecked(false);
-
-    ec2 = new QCheckBox();
-    ec2->setText(QStringLiteral("Extra Credit 2"));
-    ec2->setChecked(false);
-
-    ec3 = new QCheckBox();
-    ec3->setText(QStringLiteral("Extra Credit 3"));
-    ec3->setChecked(false);
-
-    ec4 = new QCheckBox();
-    ec4->setText(QStringLiteral("Extra Credit 4"));
-    ec4->setChecked(false);
-
     vLayout->addWidget(saveImage);
     vLayout->addWidget(scene_label);
     vLayout->addWidget(time_of_day_label);
@@ -199,21 +160,14 @@ void MainWindow::initialize() {
     vLayout->addWidget(far_label);
     vLayout->addWidget(farLayout);
     vLayout->addWidget(filters_label);
-    vLayout->addWidget(filter1);
-    vLayout->addWidget(filter2);
+    vLayout->addWidget(terrainWireframeBox);
     // Extra Credit:
     vLayout->addWidget(ec_label);
-    vLayout->addWidget(ec1);
-    vLayout->addWidget(ec2);
-    vLayout->addWidget(ec3);
-    vLayout->addWidget(ec4);
-
     connectUIElements();
 
     // Set default values of 5 for tesselation parameters
     onValChangeTime(5);
-    onValChangeP1(5);
-    onValChangeP2(5);
+    onTerrainResolutionChange(5);
 
     // Set default values for near and far planes
     onValChangeNearBox(0.1f);
@@ -226,23 +180,16 @@ void MainWindow::finish() {
 }
 
 void MainWindow::connectUIElements() {
-    connectPerPixelFilter();
-    connectKernelBasedFilter();
+    connectTerrainWireframe();
     connectSaveImage();
     connectTimeOfDay();
-    connectParam1();
-    connectParam2();
+    connectTerrainResolution();
     connectNear();
     connectFar();
-    connectExtraCredit();
 }
 
-void MainWindow::connectPerPixelFilter() {
-    connect(filter1, &QCheckBox::clicked, this, &MainWindow::onPerPixelFilter);
-}
-
-void MainWindow::connectKernelBasedFilter() {
-    connect(filter2, &QCheckBox::clicked, this, &MainWindow::onKernelBasedFilter);
+void MainWindow::connectTerrainWireframe() {
+    connect(terrainWireframeBox, &QCheckBox::clicked, this, &MainWindow::onTerrainWireframe);
 }
 
 void MainWindow::connectSaveImage() {
@@ -255,16 +202,10 @@ void MainWindow::connectTimeOfDay(){
             this, &MainWindow::onValChangeTime);
 }
 
-void MainWindow::connectParam1() {
-    connect(p1Slider, &QSlider::valueChanged, this, &MainWindow::onValChangeP1);
-    connect(p1Box, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-            this, &MainWindow::onValChangeP1);
-}
-
-void MainWindow::connectParam2() {
-    connect(p2Slider, &QSlider::valueChanged, this, &MainWindow::onValChangeP2);
-    connect(p2Box, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-            this, &MainWindow::onValChangeP2);
+void MainWindow::connectTerrainResolution() {
+    connect(terrainResolutionSlider, &QSlider::valueChanged, this, &MainWindow::onTerrainResolutionChange);
+    connect(terrainResolutionBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            this, &MainWindow::onTerrainResolutionChange);
 }
 
 void MainWindow::connectNear() {
@@ -279,20 +220,8 @@ void MainWindow::connectFar() {
             this, &MainWindow::onValChangeFarBox);
 }
 
-void MainWindow::connectExtraCredit() {
-    connect(ec1, &QCheckBox::clicked, this, &MainWindow::onExtraCredit1);
-    connect(ec2, &QCheckBox::clicked, this, &MainWindow::onExtraCredit2);
-    connect(ec3, &QCheckBox::clicked, this, &MainWindow::onExtraCredit3);
-    connect(ec4, &QCheckBox::clicked, this, &MainWindow::onExtraCredit4);
-}
-
-void MainWindow::onPerPixelFilter() {
-    settings.perPixelFilter = !settings.perPixelFilter;
-    realtime->settingsChanged();
-}
-
-void MainWindow::onKernelBasedFilter() {
-    settings.kernelBasedFilter = !settings.kernelBasedFilter;
+void MainWindow::onTerrainWireframe() {
+    settings.terrainWireframe = !settings.terrainWireframe;
     realtime->settingsChanged();
 }
 
@@ -324,17 +253,10 @@ void MainWindow::onValChangeTime(int newValue) {
     realtime->settingsChanged();
 }
 
-void MainWindow::onValChangeP1(int newValue) {
-    p1Slider->setValue(newValue);
-    p1Box->setValue(newValue);
-    settings.shapeParameter1 = p1Slider->value();
-    realtime->settingsChanged();
-}
-
-void MainWindow::onValChangeP2(int newValue) {
-    p2Slider->setValue(newValue);
-    p2Box->setValue(newValue);
-    settings.shapeParameter2 = p2Slider->value();
+void MainWindow::onTerrainResolutionChange(int newValue) {
+    terrainResolutionSlider->setValue(newValue);
+    terrainResolutionBox->setValue(newValue);
+    settings.terrainResolution = terrainResolutionSlider->value();
     realtime->settingsChanged();
 }
 
@@ -363,27 +285,5 @@ void MainWindow::onValChangeFarBox(double newValue) {
     farSlider->setValue(int(newValue*100.f));
     //farBox->setValue(newValue);
     settings.farPlane = farBox->value();
-    realtime->settingsChanged();
-}
-
-// Extra Credit:
-
-void MainWindow::onExtraCredit1() {
-    settings.extraCredit1 = !settings.extraCredit1;
-    realtime->settingsChanged();
-}
-
-void MainWindow::onExtraCredit2() {
-    settings.extraCredit2 = !settings.extraCredit2;
-    realtime->settingsChanged();
-}
-
-void MainWindow::onExtraCredit3() {
-    settings.extraCredit3 = !settings.extraCredit3;
-    realtime->settingsChanged();
-}
-
-void MainWindow::onExtraCredit4() {
-    settings.extraCredit4 = !settings.extraCredit4;
     realtime->settingsChanged();
 }

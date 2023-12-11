@@ -25,9 +25,8 @@ public:
     // Returns the height angle of the camera in RADIANS.
     float getHeightAngle() const;
 
-    float getFocalLength() const;
+    glm::vec4 getWorldSpaceLook() const;
 
-    float getAperture() const;
     glm::mat4 getProjectionMatrix() const;
     glm::mat4 getScalingMatrix() const;
     glm::mat4 getUnhingingMatrix() const;

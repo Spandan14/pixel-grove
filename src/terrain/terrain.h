@@ -11,6 +11,7 @@ public:
     TerrainGenerator();
     ~TerrainGenerator();
     int getResolution() { return m_resolution; };
+    void setResolution(int resolution) { m_resolution = resolution; };
     std::vector<float> generateTerrain();
 
 private:

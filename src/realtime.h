@@ -52,6 +52,9 @@ private:
     // Device Correction Variables
     int m_devicePixelRatio;
 
+    // initialization
+    bool initialized = false;
+
     // Terrain variables
     void setupTerrain();
     void paintTerrain();
