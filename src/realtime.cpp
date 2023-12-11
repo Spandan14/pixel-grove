@@ -5,6 +5,9 @@
 #include <QKeyEvent>
 #include <iostream>
 #include "settings.h"
+#include "src/utils/shaderloader.h"
+#include "glm/ext/matrix_transform.hpp"
+#include "glm/ext/matrix_clip_space.hpp"
 
 // ================== Project 5: Lights, Camera
 
@@ -57,32 +60,49 @@ void Realtime::initializeGL() {
     glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
     // Students: anything requiring OpenGL calls when the program starts should be done here
+    setupCamera();
     setupTerrain();
+}
+
+void Realtime::setupCamera() {
+
+//
+//    // these might be fucked lowkey, TODO check
+      m_world = glm::mat4(1.0f);
+      m_world = glm::translate(m_world, glm::vec3(-0.5f, -0.5f, 0.0f));
+//    m_camera = glm::lookAt(glm::vec3(1, 1, 1), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
+//
+//    m_proj = glm::mat4(1.0f);
+//    m_proj = glm::perspective(45.0f, GLfloat(size().width()) / size().height(), 0.01f, 100.0f);
+
+    SceneCameraData initialData{};
+    initialData.pos = glm::vec4(1.f, 1.f, 1.f, 1.f);
+    initialData.look = glm::vec4(-1.f, -1.f, -1.f, 0.f);
+    initialData.up = glm::vec4(0.f, 1.f, 0.f, 0.f);
+    initialData.heightAngle = M_PI / 4.f;
+
+    m_camera = Camera(size().width(), size().height(), initialData);
 }
 
 void Realtime::setupTerrain() {
     glClearColor(0, 0, 0, 1);
-    m_program = new QOpenGLShaderProgram;
-    std::cout << QDir::currentPath().toStdString() << std::endl;
-    m_program->addShaderFromSourceFile(QOpenGLShader::Vertex,":/resources/shader/vertex.vert");
-    m_program->addShaderFromSourceFile(QOpenGLShader::Fragment,":/resources/shader/fragment.frag");
-    m_program->link();
-    m_program->bind();
 
-    m_texture_shader = ShaderLoader::createShaderProgram(":/resources/shaders/texture.vert",
-                                                         ":/resources/shaders/texture.frag");
+    m_terrain_shader = ShaderLoader::createShaderProgram(":/resources/shaders/terrain.vert",
+                                                        ":/resources/shaders/terrain.frag");
 
-    m_projMatrixLoc = m_program->uniformLocation("projMatrix");
-    m_mvMatrixLoc = m_program->uniformLocation("mvMatrix");
+    glUseProgram(m_terrain_shader);
 
-    m_terrainVao.create();
-    m_terrainVao.bind();
+    m_proj_matrix_loc = glGetUniformLocation(m_terrain_shader, "projMatrix");
+    m_mv_matrix_loc = glGetUniformLocation(m_terrain_shader, "mvMatrix");
 
-    std::vector<GLfloat> verts = m_terrain.generateTerrain();
+    glGenVertexArrays(1, &m_terrain_vao);
+    glBindVertexArray(m_terrain_vao);
 
-    m_terrainVbo.create();
-    m_terrainVbo.bind();
-    m_terrainVbo.allocate(verts.data(),verts.size()*sizeof(GLfloat));
+    std::vector<GLfloat> vertices = m_terrain.generateTerrain();
+
+    glGenBuffers(1, &m_terrain_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_terrain_vbo);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -97,34 +117,32 @@ void Realtime::setupTerrain() {
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
                           reinterpret_cast<void *>(6 * sizeof(GLfloat)));
 
-    m_terrainVbo.release();
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    m_world.setToIdentity();
-    m_world.translate(QVector3D(-0.5,-0.5,0));
-
-
-    m_camera.setToIdentity();
-    m_camera.lookAt(QVector3D(1,1,1),QVector3D(0,0,0),QVector3D(0,0,1));
-
-    m_program->release();
+    glUseProgram(0);
 }
 
 void Realtime::paintTerrain() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    m_program->bind();
-    m_program->setUniformValue(m_projMatrixLoc, m_proj);
-    m_program->setUniformValue(m_mvMatrixLoc, m_camera * m_world);
-    m_program->setUniformValue(m_program->uniformLocation("wireshade"),m_terrain.m_wireshade);
+    glUseProgram(m_terrain_shader);
+
+    glUniformMatrix4fv(m_proj_matrix_loc, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
+    glm::mat4 mv_matrix = m_camera.getViewMatrix();
+    glUniformMatrix4fv(m_mv_matrix_loc, 1, GL_FALSE, &mv_matrix[0][0]);
+    glUniform1i(glGetUniformLocation(m_terrain_shader, "wireshade"), settings.kernelBasedFilter);
 
     int res = m_terrain.getResolution();
 
-
-    glPolygonMode(GL_FRONT_AND_BACK,m_terrain.m_wireshade? GL_LINE : GL_FILL);
+    glBindVertexArray(m_terrain_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, m_terrain_vbo);
+    glPolygonMode(GL_FRONT_AND_BACK, settings.kernelBasedFilter ? GL_LINE : GL_FILL);
     glDrawArrays(GL_TRIANGLES, 0, res * res * 6);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    m_program->release();
+    glUseProgram(0);
 }
 
 void Realtime::paintGL() {
@@ -181,6 +199,7 @@ void Realtime::mouseMoveEvent(QMouseEvent *event) {
         m_prev_mouse_pos = glm::vec2(posX, posY);
 
         // Use deltaX and deltaY here to rotate
+        m_camera.updateRotation(deltaX, deltaY);
 
         update(); // asks for a PaintGL() call to occur
     }
@@ -192,6 +211,7 @@ void Realtime::timerEvent(QTimerEvent *event) {
     m_elapsedTimer.restart();
 
     // Use deltaTime and m_keyMap here to move around
+    m_camera.updatePos(m_keyMap, deltaTime * 3.f);
 
     update(); // asks for a PaintGL() call to occur
 }

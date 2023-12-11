@@ -43,6 +43,9 @@ add_executable(${PROJECT_NAME}
       src/utils/aspectratiowidget/aspectratiowidget.hpp
         src/terrain/terrain.cpp
         src/terrain/terrain.h
+        src/camera/camera.cpp
+        src/camera/camera.h
+        src/camera/camera.cpp
 
 )
 
@@ -52,6 +55,8 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   "/"
   FILES
   resources/images/kitten.png
+  resources/shaders/terrain.frag
+  resources/shaders/terrain.vert
 )
 
 # GLEW: this creates its library and allows you to `#include "GL/glew.h"`

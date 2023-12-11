@@ -8,8 +8,6 @@
 TerrainGenerator::TerrainGenerator()
 {
     // Task 8: turn off wireframe shading
-    // m_wireshade = true; // STENCIL CODE
-    m_wireshade = false; // TA SOLUTION
 
     // Define resolution of terrain generation
     m_resolution = 100;
@@ -37,9 +35,9 @@ TerrainGenerator::~TerrainGenerator()
 
 // Helper for generateTerrain()
 void addPointToVector(glm::vec3 point, std::vector<float>& vector) {
-    vector.push_back(point.x);
     vector.push_back(point.y);
     vector.push_back(point.z);
+    vector.push_back(point.x);
 }
 
 // Generates the geometry of the output triangle mesh

@@ -13,6 +13,7 @@
 #include <QTime>
 #include <QTimer>
 #include "src/terrain/terrain.h"
+#include "src/camera/camera.h"
 
 class Realtime : public QOpenGLWidget
 {
@@ -55,13 +56,15 @@ private:
     void setupTerrain();
     void paintTerrain();
 
-    GLuint *m_program = nullptr;
+    GLuint m_terrain_shader;
     GLuint m_terrain_vao;
     GLuint m_terrain_vbo;
-    glm::mat4 m_proj;
-    glm::mat4 m_camera;
-    glm::mat4 m_world;
     TerrainGenerator m_terrain;
+    glm::mat4 m_world;
+
+    // Camera
+    Camera m_camera = Camera(0, 0, SceneCameraData());
+    void setupCamera();
 
     int m_proj_matrix_loc = 0;
     int m_mv_matrix_loc = 0;
