@@ -164,6 +164,8 @@ void Realtime::sceneChanged() {
 void Realtime::settingsChanged() {
 
     m_terrain.setResolution(settings.terrainResolution);
+    m_terrain.m_scale_x = settings.scaleX;
+    m_terrain.m_scale_y = settings.scaleY;
     if (initialized)
         setupTerrain();
     update(); // asks for a PaintGL() call to occur

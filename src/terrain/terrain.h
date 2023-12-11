@@ -14,6 +14,10 @@ public:
     void setResolution(int resolution) { m_resolution = resolution; };
     std::vector<float> generateTerrain();
 
+    float m_scale_x = 1;
+    float m_scale_y = 1;
+
+
 private:
 
     // Member variables for terrain generation. You will not need to use these directly.

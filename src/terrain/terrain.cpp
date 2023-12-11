@@ -113,8 +113,8 @@ glm::vec2 TerrainGenerator::sampleRandomVector(int row, int col)
 glm::vec3 TerrainGenerator::getPosition(int row, int col) {
     // Normalizing the planar coordinates to a unit square
     // makes scaling independent of sampling resolution.
-    float x = 1.0 * row / m_resolution;
-    float y = 1.0 * col / m_resolution;
+    float x = m_scale_x * row / m_resolution;
+    float y = m_scale_y * col / m_resolution;
     float z = getHeight(x, y);
     return glm::vec3(x,y,z);
 }

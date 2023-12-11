@@ -8,8 +8,8 @@ struct Settings {
     int timeOfDay = 0;
     int terrainResolution = 100;
     int shapeParameter2 = 1;
-    float nearPlane = 1;
-    float farPlane = 1;
+    float scaleX = 1;
+    float scaleY = 1;
     bool terrainWireframe = false;
 };
 

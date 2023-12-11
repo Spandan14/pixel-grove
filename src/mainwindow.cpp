@@ -34,23 +34,15 @@ void MainWindow::initialize() {
     QLabel *tesselation_label = new QLabel(); // Parameters label
     tesselation_label->setText("Tesselation");
     tesselation_label->setFont(font);
-    QLabel *camera_label = new QLabel(); // Camera label
-    camera_label->setText("Camera");
-    camera_label->setFont(font);
     QLabel *filters_label = new QLabel(); // Filters label
     filters_label->setText("Filters");
     filters_label->setFont(font);
-    QLabel *ec_label = new QLabel(); // Extra Credit label
-    ec_label->setText("Extra Credit");
-    ec_label->setFont(font);
     QLabel *param1_label = new QLabel(); // Parameter 1 label
-    param1_label->setText("Parameter 1:");
-    QLabel *param2_label = new QLabel(); // Parameter 2 label
-    param2_label->setText("Parameter 2:");
+    param1_label->setText("Terrain Resolution:");
     QLabel *near_label = new QLabel(); // Near plane label
-    near_label->setText("Near Plane:");
+    near_label->setText("X Terrain Scale:");
     QLabel *far_label = new QLabel(); // Far plane label
-    far_label->setText("Far Plane:");
+    far_label->setText("Y Terrain Scale:");
 
 
     // Create checkbox for kernel-based filter
@@ -67,8 +59,6 @@ void MainWindow::initialize() {
 
     QGroupBox *p1Layout = new QGroupBox(); // horizonal slider 1 alignment
     QHBoxLayout *l1 = new QHBoxLayout();
-    QGroupBox *p2Layout = new QGroupBox(); // horizonal slider 2 alignment
-    QHBoxLayout *l2 = new QHBoxLayout();
 
     // Create slider controls to control parameters
     timeSlider = new QSlider(Qt::Orientation::Horizontal);
@@ -112,37 +102,37 @@ void MainWindow::initialize() {
     QHBoxLayout *lfar = new QHBoxLayout();
 
     // Create slider controls to control near/far planes
-    nearSlider = new QSlider(Qt::Orientation::Horizontal); // Near plane slider
-    nearSlider->setTickInterval(1);
-    nearSlider->setMinimum(1);
-    nearSlider->setMaximum(1000);
-    nearSlider->setValue(10);
+    xScaleSlider = new QSlider(Qt::Orientation::Horizontal); // Near plane slider
+    xScaleSlider->setTickInterval(1);
+    xScaleSlider->setMinimum(1);
+    xScaleSlider->setMaximum(1000);
+    xScaleSlider->setValue(100);
 
-    nearBox = new QDoubleSpinBox();
-    nearBox->setMinimum(0.01f);
-    nearBox->setMaximum(10.f);
-    nearBox->setSingleStep(0.1f);
-    nearBox->setValue(0.1f);
+    xScaleBox = new QDoubleSpinBox();
+    xScaleBox->setMinimum(0.01f);
+    xScaleBox->setMaximum(10.f);
+    xScaleBox->setSingleStep(0.1f);
+    xScaleBox->setValue(1.0f);
 
-    farSlider = new QSlider(Qt::Orientation::Horizontal); // Far plane slider
-    farSlider->setTickInterval(1);
-    farSlider->setMinimum(1000);
-    farSlider->setMaximum(10000);
-    farSlider->setValue(10000);
+    yScaleSlider = new QSlider(Qt::Orientation::Horizontal); // Far plane slider
+    yScaleSlider->setTickInterval(1);
+    yScaleSlider->setMinimum(1);
+    yScaleSlider->setMaximum(1000);
+    yScaleSlider->setValue(100);
 
-    farBox = new QDoubleSpinBox();
-    farBox->setMinimum(10.f);
-    farBox->setMaximum(100.f);
-    farBox->setSingleStep(0.1f);
-    farBox->setValue(100.f);
+    yScaleBox = new QDoubleSpinBox();
+    yScaleBox->setMinimum(0.01f);
+    yScaleBox->setMaximum(10.f);
+    yScaleBox->setSingleStep(0.1f);
+    yScaleBox->setValue(1.0f);
 
     // Adds the slider and number box to the parameter layouts
-    lnear->addWidget(nearSlider);
-    lnear->addWidget(nearBox);
+    lnear->addWidget(xScaleSlider);
+    lnear->addWidget(xScaleBox);
     nearLayout->setLayout(lnear);
 
-    lfar->addWidget(farSlider);
-    lfar->addWidget(farBox);
+    lfar->addWidget(yScaleSlider);
+    lfar->addWidget(yScaleBox);
     farLayout->setLayout(lfar);
 
     vLayout->addWidget(saveImage);
@@ -152,9 +142,6 @@ void MainWindow::initialize() {
     vLayout->addWidget(tesselation_label);
     vLayout->addWidget(param1_label);
     vLayout->addWidget(p1Layout);
-    vLayout->addWidget(param2_label);
-    vLayout->addWidget(p2Layout);
-    vLayout->addWidget(camera_label);
     vLayout->addWidget(near_label);
     vLayout->addWidget(nearLayout);
     vLayout->addWidget(far_label);
@@ -162,7 +149,6 @@ void MainWindow::initialize() {
     vLayout->addWidget(filters_label);
     vLayout->addWidget(terrainWireframeBox);
     // Extra Credit:
-    vLayout->addWidget(ec_label);
     connectUIElements();
 
     // Set default values of 5 for tesselation parameters
@@ -170,8 +156,8 @@ void MainWindow::initialize() {
     onTerrainResolutionChange(5);
 
     // Set default values for near and far planes
-    onValChangeNearBox(0.1f);
-    onValChangeFarBox(10.f);
+    onValChangeXScaleBox(1.f);
+    onValChangeYScaleBox(1.f);
 }
 
 void MainWindow::finish() {
@@ -184,8 +170,8 @@ void MainWindow::connectUIElements() {
     connectSaveImage();
     connectTimeOfDay();
     connectTerrainResolution();
-    connectNear();
-    connectFar();
+    connectXScale();
+    connectYScale();
 }
 
 void MainWindow::connectTerrainWireframe() {
@@ -208,16 +194,16 @@ void MainWindow::connectTerrainResolution() {
             this, &MainWindow::onTerrainResolutionChange);
 }
 
-void MainWindow::connectNear() {
-    connect(nearSlider, &QSlider::valueChanged, this, &MainWindow::onValChangeNearSlider);
-    connect(nearBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
-            this, &MainWindow::onValChangeNearBox);
+void MainWindow::connectXScale() {
+    connect(xScaleSlider, &QSlider::valueChanged, this, &MainWindow::onValChangeXScaleSlider);
+    connect(xScaleBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            this, &MainWindow::onValChangeXScaleBox);
 }
 
-void MainWindow::connectFar() {
-    connect(farSlider, &QSlider::valueChanged, this, &MainWindow::onValChangeFarSlider);
-    connect(farBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
-            this, &MainWindow::onValChangeFarBox);
+void MainWindow::connectYScale() {
+    connect(yScaleSlider, &QSlider::valueChanged, this, &MainWindow::onValChangeYScaleSlider);
+    connect(yScaleBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            this, &MainWindow::onValChangeYScaleBox);
 }
 
 void MainWindow::onTerrainWireframe() {
@@ -260,30 +246,30 @@ void MainWindow::onTerrainResolutionChange(int newValue) {
     realtime->settingsChanged();
 }
 
-void MainWindow::onValChangeNearSlider(int newValue) {
-    //nearSlider->setValue(newValue);
-    nearBox->setValue(newValue/100.f);
-    settings.nearPlane = nearBox->value();
+void MainWindow::onValChangeXScaleSlider(int newValue) {
+    //xScaleSlider->setValue(newValue);
+    xScaleBox->setValue(newValue / 100.f);
+    settings.scaleX = xScaleBox->value();
     realtime->settingsChanged();
 }
 
-void MainWindow::onValChangeFarSlider(int newValue) {
-    //farSlider->setValue(newValue);
-    farBox->setValue(newValue/100.f);
-    settings.farPlane = farBox->value();
+void MainWindow::onValChangeYScaleSlider(int newValue) {
+    //yScaleSlider->setValue(newValue);
+    yScaleBox->setValue(newValue / 100.f);
+    settings.scaleY = yScaleBox->value();
     realtime->settingsChanged();
 }
 
-void MainWindow::onValChangeNearBox(double newValue) {
-    nearSlider->setValue(int(newValue*100.f));
-    //nearBox->setValue(newValue);
-    settings.nearPlane = nearBox->value();
+void MainWindow::onValChangeXScaleBox(double newValue) {
+    xScaleSlider->setValue(int(newValue * 100.f));
+    //xScaleBox->setValue(newValue);
+    settings.scaleX = xScaleBox->value();
     realtime->settingsChanged();
 }
 
-void MainWindow::onValChangeFarBox(double newValue) {
-    farSlider->setValue(int(newValue*100.f));
-    //farBox->setValue(newValue);
-    settings.farPlane = farBox->value();
+void MainWindow::onValChangeYScaleBox(double newValue) {
+    yScaleSlider->setValue(int(newValue * 100.f));
+    //yScaleBox->setValue(newValue);
+    settings.scaleY = yScaleBox->value();
     realtime->settingsChanged();
 }

@@ -21,8 +21,8 @@ private:
     void connectUIElements();
     void connectTimeOfDay();
     void connectTerrainResolution();
-    void connectNear();
-    void connectFar();
+    void connectXScale();
+    void connectYScale();
     void connectTerrainWireframe();
     void connectSaveImage();
 
@@ -34,18 +34,18 @@ private:
     QSlider *terrainResolutionSlider;
     QSpinBox *timeBox;
     QSpinBox *terrainResolutionBox;
-    QSlider *nearSlider;
-    QSlider *farSlider;
-    QDoubleSpinBox *nearBox;
-    QDoubleSpinBox *farBox;
+    QSlider *xScaleSlider;
+    QSlider *yScaleSlider;
+    QDoubleSpinBox *xScaleBox;
+    QDoubleSpinBox *yScaleBox;
 
 private slots:
     void onTerrainWireframe();
     void onSaveImage();
     void onValChangeTime(int newValue);
     void onTerrainResolutionChange(int newValue);
-    void onValChangeNearSlider(int newValue);
-    void onValChangeFarSlider(int newValue);
-    void onValChangeNearBox(double newValue);
-    void onValChangeFarBox(double newValue);
+    void onValChangeXScaleSlider(int newValue);
+    void onValChangeYScaleSlider(int newValue);
+    void onValChangeXScaleBox(double newValue);
+    void onValChangeYScaleBox(double newValue);
 };
