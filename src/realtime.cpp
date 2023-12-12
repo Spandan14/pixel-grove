@@ -9,6 +9,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#include "settings.h"
 
 float skyboxVertices[] =
     {
@@ -257,6 +258,9 @@ void Realtime::paintGL() {
     glm::mat4 projection = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "view"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "projection"), 1, GL_FALSE, &projection[0][0]);
+
+    GLint timeofdayLocation = glGetUniformLocation(m_skyblock_shader, "timeofday");
+    glUniform1f(timeofdayLocation, settings.timeOfDay);
 
     glBindVertexArray(skyboxVAO);
     glActiveTexture(GL_TEXTURE0);
