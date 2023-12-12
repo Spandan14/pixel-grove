@@ -206,9 +206,12 @@ void Realtime::paintGL() {
 
     SceneLightData light;
     light.type = LightType::LIGHT_DIRECTIONAL;
-    light.pos = glm::vec4(100.f, 100.f, 100.f, 1.f);
+    light.pos = glm::vec4(1.f, 1.f, 1.f, 1.f);
     light.dir = glm::vec4(0.25, 1, -1, 0.f);
     light.color = glm::vec4(0.5f, 0.5f, 0.5f, 1);
+    GLint lightsNum_Location = glGetUniformLocation(m_shader, "lightsNum");
+    glUniform1i(lightsNum_Location, 1);
+
     GLint lightPos_Location = glGetUniformLocation(m_shader, "worldLightPos[0]");
     glUniform4f(lightPos_Location, light.pos[0], light.pos[1], light.pos[2], light.pos[3]);
 
@@ -223,19 +226,17 @@ void Realtime::paintGL() {
 
     GLint shininess_Location = glGetUniformLocation(m_shader, "shininess");
     glUniform1f(shininess_Location, 22.f);
-    glm::vec4 ambientColor = glm::vec4(1, 1, 1, 1);
+    glm::vec4 ambientColor = glm::vec4(0.95f, 0.55f, 0.85f, 0.1f);
     GLint ambient_Location = glGetUniformLocation(m_shader, "ambientColor");
     glUniform4f(ambient_Location, ambientColor[0], ambientColor[1], ambientColor[2], ambientColor[3]);
 
-    glm::vec4 diffuseColor = glm::vec4(0.75, 1, 0.75, 1);
+    glm::vec4 diffuseColor = glm::vec4(0.95f, 0.55f, 0.85f, 1.f);
     GLint diffuse_Location = glGetUniformLocation(m_shader, "diffuseColor");
     glUniform4f(diffuse_Location, diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]);
 
-    glm::vec4 specularColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
+    glm::vec4 specularColor = glm::vec4(0.5f, 0.5f, 0.5f, 1.f);
     GLint specular_Location = glGetUniformLocation(m_shader, "specularColor");
     glUniform4f(specular_Location, specularColor[0], specularColor[1], specularColor[2], specularColor[3]);
-
-
 
     glm::mat4 modelMatrix = glm::mat3(0.2f);
     GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
@@ -251,7 +252,7 @@ void Realtime::paintGL() {
     glDepthFunc(GL_LEQUAL);
 
     glUseProgram(m_skyblock_shader);
-    glm::mat4 view = cam->getViewMatrix(); //glm::mat4(glm::mat3(cam->getViewMatrix()));
+    glm::mat4 view = glm::mat4(glm::mat3(cam->getViewMatrix()));
     glm::mat4 projection = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "view"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "projection"), 1, GL_FALSE, &projection[0][0]);
