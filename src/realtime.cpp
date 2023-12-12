@@ -177,7 +177,7 @@ void Realtime::paintTerrain() {
     glUniform1i(glGetUniformLocation(m_terrain_shader, "wireShadeOn"), settings.terrainWireframe);
 
     float lightAngle = settings.timeOfDay * 2 * M_PI / 24.f;
-    glm::vec3 lightDir = glm::vec3(0.f, glm::sin(lightAngle), glm::cos(lightAngle));
+    glm::vec3 lightDir = glm::normalize(glm::vec3(-1.f, -glm::sin(lightAngle), -glm::cos(lightAngle)));
     glUniform3fv(glGetUniformLocation(m_terrain_shader, "lightDir"), 1, &lightDir[0]);
 
     glUniform4fv(glGetUniformLocation(m_terrain_shader, "cameraPos"), 1, &m_camera.getCameraPos()[0]);

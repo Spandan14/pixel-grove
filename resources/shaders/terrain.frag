@@ -13,13 +13,15 @@ uniform vec4 cameraPos;
 uniform sampler2D rocks_texture;
 uniform sampler2D sandgrass_texture;
 
+float k_a = 0.1;
+vec4 c_ambient = vec4(0.2, 0.2, 0.2, 1.0);
 float k_d = 0.7;
-vec4 c_diffuse = vec4(0.5, 0.5, 0.5, 1.0);
+vec4 c_diffuse = vec4(0.2, 0.2, 0.8, 1.0);
 float k_s = 0.3;
 vec4 c_specular = vec4(1.0, 1.0, 1.0, 1.0);
 float shininess = 0.0;
 
-float blend = 0.9;
+float blend = 0.5;
 
 out vec4 fragColor;
 
@@ -28,13 +30,16 @@ void main(void)
     // initialize 0 color
     fragColor = vec4(0);
 
+    // ambient color
+    fragColor += k_a * c_ambient;
+
     float f_att = 1.0; // directional light only
 
     vec4 intensity = vec4(1.0, 1.0, 1.0, 1.0); // light is colored white for now
 
     // diffuse
     vec4 diffuseColor = k_d * c_diffuse;
-    float diffuseFactor = min(1.0, max(0.0, dot(normalize(vec3(norm)), lightDir)));
+    float diffuseFactor = min(1.0, max(0.0, dot(normalize(vec3(norm)), -lightDir)));
 
     vec4 textureColor = vec4(1);
     if (worldHeight < -0.025) {
