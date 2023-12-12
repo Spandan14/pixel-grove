@@ -101,7 +101,7 @@ void Realtime::initializeGL() {
     glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
     tulip = new Mesh("resources/assets/tulip.obj");
-    this->stem = new Stem(1, 0.1);
+    this->stem = new Stem(10, 5);
 
     SceneCameraData cameraData;
     cameraData.look = glm::vec4(0.f, 0.f, -1.f, 0.f);
@@ -239,15 +239,15 @@ void Realtime::paintGL() {
     GLint specular_Location = glGetUniformLocation(m_shader, "specularColor");
     glUniform4f(specular_Location, specularColor[0], specularColor[1], specularColor[2], specularColor[3]);
 
-    glm::mat4 modelMatrix = glm::mat3(0.2f);
+    glm::mat4 modelMatrix = glm::mat3(100.f);
     GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
     glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &modelMatrix[0][0]);
 
-    glm::mat3 inverseCTM = glm::transpose(glm::inverse(glm::mat3(0.2f)));
+    glm::mat3 inverseCTM = glm::transpose(glm::inverse(glm::mat3(100.f)));
     GLint inverseCTMLocation = glGetUniformLocation(m_shader, "inverseCTM");
     glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &inverseCTM[0][0]);
 
-    stem->draw();
+    tulip->drawMesh();
 
     glUseProgram(0);
     glDepthFunc(GL_LEQUAL);

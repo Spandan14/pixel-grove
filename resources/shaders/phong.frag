@@ -33,11 +33,11 @@ float falloff(float x, float innerAngle, float outerAngle){
 void main() {
     fragColor = vec4(0.0);
     fragColor = k_a * ambientColor;
-    vec3 E = normalize(vec3(worldCameraPos) - worldPosition);
+    vec3 E = normalize(vec3(worldCameraPos) -worldPosition);
 
     for (int i = 0; i < lightsNum; i++){
        if (lightType[i] == 0){
-            vec3 L = vec3(-normalize(worldLightDir[i]));
+            vec3 L = -vec3(normalize(worldLightDir[i]));
            fragColor += (k_d * diffuseColor) * clamp(dot(L, normalize(worldNormal)), 0.0, 1.f) * worldLightCol[i];
 
             vec3 R = reflect(-L, normalize(worldNormal));
