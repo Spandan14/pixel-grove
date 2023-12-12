@@ -186,13 +186,13 @@ void Realtime::paintGL() {
     glUseProgram(m_shader);
 
     GLint ka_Location = glGetUniformLocation(m_shader, "k_a");
-    glUniform1f(ka_Location, 0.1);
+    glUniform1f(ka_Location, 0.5);
 
     GLint kd_Location = glGetUniformLocation(m_shader, "k_d");
-    glUniform1f(kd_Location, 0.1);
+    glUniform1f(kd_Location, 0.7);
 
     GLint ks_Location = glGetUniformLocation(m_shader, "k_s");
-    glUniform1f(ks_Location, 0.1);
+    glUniform1f(ks_Location, 0.54);
 
     GLint camPosLocation = glGetUniformLocation(m_shader, "worldCameraPos");
     glm::vec4 camPos = cam->getCameraPos();
@@ -207,8 +207,8 @@ void Realtime::paintGL() {
     SceneLightData light;
     light.type = LightType::LIGHT_DIRECTIONAL;
     light.pos = glm::vec4(100.f, 100.f, 100.f, 1.f);
-    light.dir = glm::vec4(100.f, 100.f, 100.f, 0.f);
-    light.color = glm::vec4(100.f, 100.f, 100.f, 255.f);
+    light.dir = glm::vec4(0.25, 1, -1, 0.f);
+    light.color = glm::vec4(0.5f, 0.5f, 0.5f, 1);
     GLint lightPos_Location = glGetUniformLocation(m_shader, "worldLightPos[0]");
     glUniform4f(lightPos_Location, light.pos[0], light.pos[1], light.pos[2], light.pos[3]);
 
@@ -223,32 +223,31 @@ void Realtime::paintGL() {
 
     GLint shininess_Location = glGetUniformLocation(m_shader, "shininess");
     glUniform1f(shininess_Location, 22.f);
-
-    glm::vec4 ambientColor = glm::vec4(100.f, 100.f, 100.f, 255.f);
+    glm::vec4 ambientColor = glm::vec4(1, 1, 1, 1);
     GLint ambient_Location = glGetUniformLocation(m_shader, "ambientColor");
     glUniform4f(ambient_Location, ambientColor[0], ambientColor[1], ambientColor[2], ambientColor[3]);
 
-    glm::vec4 diffuseColor = glm::vec4(100.f, 100.f, 100.f, 255.f);
+    glm::vec4 diffuseColor = glm::vec4(0.75, 1, 0.75, 1);
     GLint diffuse_Location = glGetUniformLocation(m_shader, "diffuseColor");
     glUniform4f(diffuse_Location, diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]);
 
-    glm::vec4 specularColor = glm::vec4(100.f, 100.f, 100.f, 255.f);
+    glm::vec4 specularColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
     GLint specular_Location = glGetUniformLocation(m_shader, "specularColor");
     glUniform4f(specular_Location, specularColor[0], specularColor[1], specularColor[2], specularColor[3]);
 
-    tulip->getVAO();
 
-    glm::mat4 modelMatrix = glm::mat4(1.f);
+
+    glm::mat4 modelMatrix = glm::mat3(0.2f);
     GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
     glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &modelMatrix[0][0]);
 
-    glm::mat4 inverseCTM = glm::transpose(glm::inverse(glm::mat3(glm::mat4(1.f))));
+    glm::mat3 inverseCTM = glm::transpose(glm::inverse(glm::mat3(0.2f)));
     GLint inverseCTMLocation = glGetUniformLocation(m_shader, "inverseCTM");
     glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &inverseCTM[0][0]);
 
     tulip->drawMesh();
-    glBindVertexArray(0);
 
+    glUseProgram(0);
     glDepthFunc(GL_LEQUAL);
 
     glUseProgram(m_skyblock_shader);
@@ -264,6 +263,7 @@ void Realtime::paintGL() {
     glBindVertexArray(0);
 
     glDepthFunc(GL_LESS);
+    glUseProgram(0);
 }
 
 int Realtime::lightTypeToNum(LightType light_type){

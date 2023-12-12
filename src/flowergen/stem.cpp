@@ -6,12 +6,13 @@ Stem::Stem(float height, float radius)
     this->radius = radius;
     glGenBuffers(1, &m_vbo);
     glGenVertexArrays(1, &m_vao);
+    this->genStem();
 }
 
 
 void Stem::genStem(){
 
-
+    this->setVertexData();
 }
 
 void Stem::freeBindings(){

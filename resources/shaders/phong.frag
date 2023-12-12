@@ -36,12 +36,12 @@ void main() {
     vec3 E = normalize(vec3(worldCameraPos) - worldPosition);
 
     for (int i = 0; i < lightsNum; i++){
-        if (lightType[i] == 0){
+       if (lightType[i] == 0){
             vec3 L = vec3(-normalize(worldLightDir[i]));
-            fragColor += (k_d * diffuseColor) * clamp(dot(L, normalize(worldNormal)), 0.0, 1.f) * worldLightCol[i];
+           fragColor += (k_d * diffuseColor) * clamp(dot(L, normalize(worldNormal)), 0.0, 1.f) * worldLightCol[i];
 
             vec3 R = reflect(-L, normalize(worldNormal));
             fragColor += clamp((k_s * specularColor) * clamp(pow(dot(R, E), shininess), 0.f, 1.f) * worldLightCol[i], 0.f, 1.f);
         }
-    }
+   }
 }

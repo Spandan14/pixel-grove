@@ -1,5 +1,6 @@
 #include "mesh.h"
 #include <cstring>
+#include <iostream>
 
 Mesh::Mesh(const char* filepath)
 {
@@ -33,10 +34,18 @@ void Mesh::bindMesh(){
 }
 
 void Mesh::drawMesh(){
+    glBindVertexArray(this->m_vao);
     glDrawArrays(GL_TRIANGLES, 0, this->m_mesh.size() / 8);
+    glBindVertexArray(0);
 }
 
 bool Mesh::loadMesh(){
+    std::vector<int> vertices;
+    std::vector<int> uvs;
+    std::vector<int> normals;
+    std::vector<glm::vec3> t_vertices;
+    std::vector<glm::vec3> t_normals;
+    std::vector<glm::vec2> t_uv;
     FILE * file = fopen(this->filepath, "r");
     if( file == NULL ){
         printf("File open error\n");
@@ -49,12 +58,8 @@ bool Mesh::loadMesh(){
         int res = fscanf(file, "%s", lineHeader);
         if (res == EOF)
             break;
-        std::vector<glm::vec3> t_vertices;
-        std::vector<glm::vec3> t_normals;
-        std::vector<glm::vec2> t_uv;
-        std::vector<int> vertices;
-        std::vector<int> uvs;
-        std::vector<int> normals;
+
+
 
         if ( strcmp( lineHeader, "v" ) == 0 ){
             glm::vec3 vertex;
@@ -90,21 +95,23 @@ bool Mesh::loadMesh(){
             normals.push_back(normalIndex[2]);
         }
 
-        for(unsigned int i; i < vertices.size(); ++i){
-            glm::vec3 mesh_vertex = t_vertices[vertices[i] - 1];
-            m_mesh.push_back(mesh_vertex.x);
-            m_mesh.push_back(mesh_vertex.y);
-            m_mesh.push_back(mesh_vertex.z);
-            glm::vec3 mesh_normal = t_normals[normals[i] - 1];
-            m_mesh.push_back(mesh_normal.x);
-            m_mesh.push_back(mesh_normal.y);
-            m_mesh.push_back(mesh_normal.z);
-            glm::vec2 mesh_uv = t_uv[uvs[i] - 1];
-            m_mesh.push_back(mesh_uv.x);
-            m_mesh.push_back(mesh_uv.y);
-
-        }
 
     }
+    for(unsigned int i; i < vertices.size(); ++i){
+
+        glm::vec3 mesh_vertex = t_vertices[vertices[i] - 1];
+        m_mesh.push_back(mesh_vertex.x);
+        m_mesh.push_back(mesh_vertex.y);
+        m_mesh.push_back(mesh_vertex.z);
+        glm::vec3 mesh_normal = t_normals[normals[i] - 1];
+        m_mesh.push_back(mesh_normal.x);
+        m_mesh.push_back(mesh_normal.y);
+        m_mesh.push_back(mesh_normal.z);
+        glm::vec2 mesh_uv = t_uv[uvs[i] - 1];
+        m_mesh.push_back(mesh_uv.x);
+        m_mesh.push_back(mesh_uv.y);
+
+    }
+
     return true;
 }
