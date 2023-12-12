@@ -26,7 +26,6 @@ find_package(Qt6 REQUIRED COMPONENTS Gui)
 # Specifies .cpp and .h files to be passed to the compiler
 add_executable(${PROJECT_NAME}
 
-
     src/flowergen/flowers.h
     src/flowergen/rose.h src/flowergen/rose.cpp
     src/flowergen/tulip.h src/flowergen/tulip.cpp
@@ -55,7 +54,9 @@ add_executable(${PROJECT_NAME}
 
   src/camera/camera.h
   src/camera/camera.cpp
+
   src/flowergen/stem.h src/flowergen/stem.cpp
+
 )
 
 # Specifies other files
@@ -74,6 +75,12 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   resources/shaders/skyblock.vert
   resources/assets/tulip.obj
 
+)
+
+target_sources(pixel-grove_other_files
+  PRIVATE
+    resources/shaders/phong.frag
+    resources/shaders/phong.vert
 )
 
 # GLEW: this creates its library and allows you to `#include "GL/glew.h"`

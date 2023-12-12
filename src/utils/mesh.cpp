@@ -32,7 +32,9 @@ void Mesh::bindMesh(){
     glBindVertexArray(0);
 }
 
-
+void Mesh::drawMesh(){
+    glDrawArrays(GL_TRIANGLES, 0, this->m_mesh.size() / 8);
+}
 
 bool Mesh::loadMesh(){
     FILE * file = fopen(this->filepath, "r");

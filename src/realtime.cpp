@@ -4,13 +4,11 @@
 #include <QKeyEvent>
 
 #include <iostream>
-#include "settings.h"
 #include "src/utils/shaderloader.h"
+#include "src/utils/mesh.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-
-// ================== Project 5: Lights, Camera
 
 float skyboxVertices[] =
     {
@@ -87,7 +85,7 @@ void Realtime::initializeGL() {
     std::cout << "Initialized GL: Version " << glewGetString(GLEW_VERSION) << std::endl;
 
     // Students: anything requiring OpenGL calls when the program starts should be done here
-
+    m_shader = ShaderLoader::createShaderProgram("resources/shaders/phong.vert", "resources/shaders/phong.frag");
     m_skyblock_shader = ShaderLoader::createShaderProgram("resources/shaders/skyblock.vert",
                                                           "resources/shaders/skyblock.frag");
 
@@ -101,6 +99,8 @@ void Realtime::initializeGL() {
     glFrontFace(GL_CCW);
     // Tells OpenGL how big the screen is
     glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
+
+    tulip = new Mesh("resources/assets/tulip.obj");
 
     SceneCameraData cameraData;
     cameraData.look = glm::vec4(0.f, 0.f, -1.f, 0.f);
@@ -183,10 +183,76 @@ void Realtime::initializeGL() {
 
 void Realtime::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glUseProgram(m_shader);
+
+    GLint ka_Location = glGetUniformLocation(m_shader, "k_a");
+    glUniform1f(ka_Location, 0.1);
+
+    GLint kd_Location = glGetUniformLocation(m_shader, "k_d");
+    glUniform1f(kd_Location, 0.1);
+
+    GLint ks_Location = glGetUniformLocation(m_shader, "k_s");
+    glUniform1f(ks_Location, 0.1);
+
+    GLint camPosLocation = glGetUniformLocation(m_shader, "worldCameraPos");
+    glm::vec4 camPos = cam->getCameraPos();
+    glUniform4f(camPosLocation, camPos[0], camPos[1], camPos[2], camPos[3]);
+
+    GLint viewLocation = glGetUniformLocation(m_shader, "viewMatrix");
+    glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
+
+    GLint projectionLocation = glGetUniformLocation(m_shader, "projectionMatrix");
+    glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
+
+    SceneLightData light;
+    light.type = LightType::LIGHT_DIRECTIONAL;
+    light.pos = glm::vec4(100.f, 100.f, 100.f, 1.f);
+    light.dir = glm::vec4(100.f, 100.f, 100.f, 0.f);
+    light.color = glm::vec4(100.f, 100.f, 100.f, 255.f);
+    GLint lightPos_Location = glGetUniformLocation(m_shader, "worldLightPos[0]");
+    glUniform4f(lightPos_Location, light.pos[0], light.pos[1], light.pos[2], light.pos[3]);
+
+    GLint lightDir_Location = glGetUniformLocation(m_shader, "worldLightDir[0]");
+    glUniform4f(lightDir_Location, light.dir[0], light.dir[1], light.dir[2], light.dir[3]);
+
+    GLint lightColor_Location = glGetUniformLocation(m_shader, "worldLightCol[0]");
+    glUniform4f(lightColor_Location, light.color[0], light.color[1], light.color[2], light.color[3]);
+
+    GLint lightType_Location = glGetUniformLocation(m_shader, "lightType[0]");
+    glUniform1i(lightType_Location, lightTypeToNum(light.type));
+
+    GLint shininess_Location = glGetUniformLocation(m_shader, "shininess");
+    glUniform1f(shininess_Location, 22.f);
+
+    glm::vec4 ambientColor = glm::vec4(100.f, 100.f, 100.f, 255.f);
+    GLint ambient_Location = glGetUniformLocation(m_shader, "ambientColor");
+    glUniform4f(ambient_Location, ambientColor[0], ambientColor[1], ambientColor[2], ambientColor[3]);
+
+    glm::vec4 diffuseColor = glm::vec4(100.f, 100.f, 100.f, 255.f);
+    GLint diffuse_Location = glGetUniformLocation(m_shader, "diffuseColor");
+    glUniform4f(diffuse_Location, diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]);
+
+    glm::vec4 specularColor = glm::vec4(100.f, 100.f, 100.f, 255.f);
+    GLint specular_Location = glGetUniformLocation(m_shader, "specularColor");
+    glUniform4f(specular_Location, specularColor[0], specularColor[1], specularColor[2], specularColor[3]);
+
+    tulip->getVAO();
+
+    glm::mat4 modelMatrix = glm::mat4(1.f);
+    GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
+    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &modelMatrix[0][0]);
+
+    glm::mat4 inverseCTM = glm::transpose(glm::inverse(glm::mat3(glm::mat4(1.f))));
+    GLint inverseCTMLocation = glGetUniformLocation(m_shader, "inverseCTM");
+    glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &inverseCTM[0][0]);
+
+    tulip->drawMesh();
+    glBindVertexArray(0);
+
     glDepthFunc(GL_LEQUAL);
 
     glUseProgram(m_skyblock_shader);
-    glm::mat4 view = glm::mat4(glm::mat3(cam->getViewMatrix()));
+    glm::mat4 view = cam->getViewMatrix(); //glm::mat4(glm::mat3(cam->getViewMatrix()));
     glm::mat4 projection = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "view"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "projection"), 1, GL_FALSE, &projection[0][0]);
@@ -198,6 +264,20 @@ void Realtime::paintGL() {
     glBindVertexArray(0);
 
     glDepthFunc(GL_LESS);
+}
+
+int Realtime::lightTypeToNum(LightType light_type){
+    switch(light_type){
+    case LightType::LIGHT_DIRECTIONAL:
+        return 0;
+        break;
+    case LightType::LIGHT_POINT:
+        return 1;
+        break;
+    case LightType::LIGHT_SPOT:
+        return 2;
+        break;
+    }
 }
 
 void Realtime::resizeGL(int w, int h) {
