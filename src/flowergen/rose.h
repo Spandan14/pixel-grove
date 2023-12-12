@@ -4,6 +4,7 @@
 
 
 #include "src/flowergen/flowers.h"
+#include "../utils/scenedata.h"
 class Rose
 {
 public:
@@ -13,6 +14,8 @@ private:
     std::vector<GLuint> m_vbos;
     std::vector<GLuint> m_vaos;
 
+    SceneMaterial flower_mat;
+    SceneMaterial leaf_mat;
     float angle;
 
 };

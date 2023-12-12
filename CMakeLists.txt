@@ -37,13 +37,13 @@ add_executable(${PROJECT_NAME}
       src/realtime.cpp
       src/mainwindow.cpp
       src/settings.cpp
-      src/utils/scenefilereader.cpp
+
       src/utils/sceneparser.cpp
       src/mainwindow.h
       src/realtime.h
       src/settings.h
       src/utils/scenedata.h
-      src/utils/scenefilereader.h
+
       src/utils/sceneparser.h
       src/utils/shaderloader.h
       src/utils/aspectratiowidget/aspectratiowidget.hpp
@@ -55,6 +55,7 @@ add_executable(${PROJECT_NAME}
 
   src/camera/camera.h
   src/camera/camera.cpp
+  src/flowergen/stem.h src/flowergen/stem.cpp
 )
 
 # Specifies other files

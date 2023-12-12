@@ -5,8 +5,15 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
+enum class Flower_Component{
+    FLOWER,
+    LEAF,
+    STEM,
+};
 
 struct L_node {
+    Flower_Component node_type;
+    glm::mat4 transformation;
     std::vector<L_node*> children;
 };
 

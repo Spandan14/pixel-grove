@@ -1,32 +1,8 @@
 #include "sceneparser.h"
-#include "scenefilereader.h"
+
 #include <glm/gtx/transform.hpp>
 
 #include <iostream>
-
-bool SceneParser::parse(const std::string& filepath, RenderData &renderData) {
-    ScenefileReader fileReader = ScenefileReader(filepath);
-    bool success = fileReader.readJSON();
-    if (!success) {
-        return false;
-    }
-
-    // Using the Lab 5 code here
-    renderData.globalData = fileReader.getGlobalData();
-    renderData.cameraData = fileReader.getCameraData();
-
-
-    // Task 6: populate renderData's list of primitives and their transforms.
-    //         This will involve traversing the scene graph, and we recommend you
-    //         create a helper function to do so!
-    SceneNode* root = fileReader.getRootNode();
-    renderData.shapes.clear();
-
-    glm::mat4 identityCTM = glm::mat4(1.0f);
-    SceneParser::populateRenderData(&renderData, root, identityCTM);
-
-    return true;
-}
 
 
 void SceneParser::populateRenderData(RenderData *renderData, SceneNode *root, glm::mat4 currentCTM) { // NOLINT(*-no-recursion)
