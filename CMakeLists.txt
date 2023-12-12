@@ -55,6 +55,8 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   "/"
   FILES
   resources/images/kitten.png
+  resources/textures/terrain-rock1.png
+  resources/textures/terrain-sandgrass1.png
   resources/shaders/terrain.frag
   resources/shaders/terrain.vert
 )

@@ -57,13 +57,16 @@ private:
 
     // Terrain variables
     void setupTerrain();
+    void setupTerrainTextures();
     void paintTerrain();
 
     GLuint m_terrain_shader;
     GLuint m_terrain_vao;
     GLuint m_terrain_vbo;
     TerrainGenerator m_terrain;
-    glm::mat4 m_world;
+
+    GLuint m_terrain_rocks_texture;
+    GLuint m_terrain_sandgrass_texture;
 
     // Camera
     Camera m_camera = Camera(0, 0, SceneCameraData());

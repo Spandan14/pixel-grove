@@ -41,6 +41,11 @@ void addPointToVector(glm::vec3 point, std::vector<float>& vector) {
     vector.push_back(point.x);
 }
 
+void addUVToVector(glm::vec2 uv, std::vector<float>& vector) {
+    vector.push_back(uv.x);
+    vector.push_back(uv.y);
+}
+
 // Generates the geometry of the output triangle mesh
 std::vector<float> TerrainGenerator::generateTerrain() {
     std::vector<float> verts;
@@ -64,6 +69,11 @@ std::vector<float> TerrainGenerator::generateTerrain() {
             glm::vec3 n3 = getNormal(x2,y2);
             glm::vec3 n4 = getNormal(x1,y2);
 
+            glm::vec2 uv1 = getUV(x1, y1);
+            glm::vec2 uv2 = getUV(x2, y1);
+            glm::vec2 uv3 = getUV(x2, y2);
+            glm::vec2 uv4 = getUV(x1, y2);
+
             // tris 1
             // x1y1z1
             // x2y1z2
@@ -71,14 +81,17 @@ std::vector<float> TerrainGenerator::generateTerrain() {
             addPointToVector(p1, verts);
             addPointToVector(n1, verts);
             addPointToVector(getColor(n1, p1), verts);
+            addUVToVector(uv1, verts);
 
             addPointToVector(p2, verts);
             addPointToVector(n2, verts);
             addPointToVector(getColor(n2, p2), verts);
+            addUVToVector(uv2, verts);
 
             addPointToVector(p3, verts);
             addPointToVector(n3, verts);
             addPointToVector(getColor(n3, p3), verts);
+            addUVToVector(uv3, verts);
 
             // tris 2
             // x1y1z1
@@ -87,14 +100,17 @@ std::vector<float> TerrainGenerator::generateTerrain() {
             addPointToVector(p1, verts);
             addPointToVector(n1, verts);
             addPointToVector(getColor(n1, p1), verts);
+            addUVToVector(uv1, verts);
 
             addPointToVector(p3, verts);
             addPointToVector(n3, verts);
             addPointToVector(getColor(n3, p3), verts);
+            addUVToVector(uv3, verts);
 
             addPointToVector(p4, verts);
             addPointToVector(n4, verts);
             addPointToVector(getColor(n4, p4), verts);
+            addUVToVector(uv4, verts);
         }
     }
     return verts;
@@ -175,6 +191,10 @@ glm::vec3 TerrainGenerator::getNormal(int row, int col) {
 
     // Return up as placeholder
     return glm::normalize(totalNormal);
+}
+
+glm::vec2 TerrainGenerator::getUV(int row, int col) {
+    return glm::vec2((float) row / (float) uv_texture_stride, (float) col / (float) uv_texture_stride);
 }
 
 // Computes color of vertex using normal and, optionally, position

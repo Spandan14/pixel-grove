@@ -17,6 +17,7 @@ public:
     float m_scale_x = 1;
     float m_scale_y = 1;
 
+    int uv_texture_stride = 10;
 
 private:
 
@@ -40,6 +41,9 @@ private:
 
     // Computes the normal of a vertex by averaging neighbors
     glm::vec3 getNormal(int row, int col);
+
+    // Computes the UV coordinate of a vertex
+    glm::vec2 getUV(int row, int col);
 
     // Computes color of vertex using normal and, optionally, position
     glm::vec3 getColor(glm::vec3 normal, glm::vec3 position);

@@ -99,18 +99,69 @@ void Realtime::setupTerrain() {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
                           nullptr);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
                           reinterpret_cast<void *>(3 * sizeof(GLfloat)));
 
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
                           reinterpret_cast<void *>(6 * sizeof(GLfloat)));
+
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
+                            reinterpret_cast<void *>(9 * sizeof(GLfloat)));
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    glUseProgram(0);
+
+    setupTerrainTextures();
+}
+
+void Realtime::setupTerrainTextures() {
+    glUseProgram(m_terrain_shader);
+
+    QImage rocks_texture = QImage(":/resources/textures/terrain-rock1.png");
+    if (rocks_texture.isNull()) {
+        std::cerr << "Failed to load texture" << std::endl;
+    }
+    rocks_texture = rocks_texture.convertToFormat(QImage::Format_RGBA8888).mirrored();
+
+    QImage sandgrass_texture = QImage(":/resources/textures/terrain-sandgrass1.png");
+    if (sandgrass_texture.isNull()) {
+        std::cerr << "Failed to load texture" << std::endl;
+    }
+    sandgrass_texture = sandgrass_texture.convertToFormat(QImage::Format_RGBA8888).mirrored();
+
+    glGenTextures(1, &m_terrain_rocks_texture);
+    glGenTextures(1, &m_terrain_sandgrass_texture);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_terrain_rocks_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rocks_texture.width(), rocks_texture.height(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, rocks_texture.bits());
+
+    // interpolation modes
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, m_terrain_sandgrass_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sandgrass_texture.width(), sandgrass_texture.height(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, sandgrass_texture.bits());
+
+    // interpolation modes
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    GLint rocks_texture_location = glGetUniformLocation(m_terrain_shader, "rocks_texture");
+    GLint sandgrass_texture_location = glGetUniformLocation(m_terrain_shader, "sandgrass_texture");
+    glUniform1i(rocks_texture_location, 0);
+    glUniform1i(sandgrass_texture_location, 1);
     glUseProgram(0);
 }
 
@@ -136,10 +187,20 @@ void Realtime::paintTerrain() {
 
     glBindVertexArray(m_terrain_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_terrain_vbo);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_terrain_rocks_texture);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, m_terrain_sandgrass_texture);
+
     glPolygonMode(GL_FRONT_AND_BACK, settings.terrainWireframe ? GL_LINE : GL_FILL);
     glDrawArrays(GL_TRIANGLES, 0, res * res * 6);
-    glBindVertexArray(0);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
     glUseProgram(0);
 }
