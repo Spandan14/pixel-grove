@@ -174,14 +174,13 @@ void Realtime::paintTerrain() {
     glUniformMatrix4fv(m_proj_matrix_loc, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
     glm::mat4 mv_matrix = m_camera.getViewMatrix();
     glUniformMatrix4fv(m_mv_matrix_loc, 1, GL_FALSE, &mv_matrix[0][0]);
-    glUniform1i(glGetUniformLocation(m_terrain_shader, "wireshade"), settings.terrainWireframe);
-//    glm::vec3 look = glm::vec3(m_camera.getWorldSpaceLook());
-//    glm::vec3 lightDir = glm::reflect(look, glm::vec3(0.f, 1.f, 0.f));
-//
+    glUniform1i(glGetUniformLocation(m_terrain_shader, "wireShadeOn"), settings.terrainWireframe);
 
     float lightAngle = settings.timeOfDay * 2 * M_PI / 24.f;
     glm::vec3 lightDir = glm::vec3(0.f, glm::sin(lightAngle), glm::cos(lightAngle));
     glUniform3fv(glGetUniformLocation(m_terrain_shader, "lightDir"), 1, &lightDir[0]);
+
+    glUniform4fv(glGetUniformLocation(m_terrain_shader, "cameraPos"), 1, &m_camera.getCameraPos()[0]);
 
     int res = m_terrain.getResolution();
 
