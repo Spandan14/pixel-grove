@@ -10,6 +10,8 @@ struct Settings {
     int shapeParameter2 = 1;
     float scaleX = 1;
     float scaleY = 1;
+    int textureStride = 10;
+    float terrainAmplification = 1.0f;
     bool terrainWireframe = false;
 };
 

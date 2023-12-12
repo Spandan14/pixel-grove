@@ -23,6 +23,8 @@ private:
     void connectTerrainResolution();
     void connectXScale();
     void connectYScale();
+    void connectTextureStride();
+    void connectTerrainAmplification();
     void connectTerrainWireframe();
     void connectSaveImage();
 
@@ -38,6 +40,10 @@ private:
     QSlider *yScaleSlider;
     QDoubleSpinBox *xScaleBox;
     QDoubleSpinBox *yScaleBox;
+    QSlider *textureStrideSlider;
+    QSpinBox *textureStrideBox;
+    QSlider *terrainAmplificationSlider;
+    QDoubleSpinBox *terrainAmplificationBox;
 
 private slots:
     void onTerrainWireframe();
@@ -48,4 +54,8 @@ private slots:
     void onValChangeYScaleSlider(int newValue);
     void onValChangeXScaleBox(double newValue);
     void onValChangeYScaleBox(double newValue);
+    void onValChangeTextureStrideSlider(int newValue);
+    void onValChangeTextureStrideBox(int newValue);
+    void onValChangeTerrainAmplificationSlider(int newValue);
+    void onValChangeTerrainAmplificationBox(double newValue);
 };

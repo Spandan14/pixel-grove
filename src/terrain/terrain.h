@@ -18,6 +18,7 @@ public:
     float m_scale_y = 1;
 
     int uv_texture_stride = 10;
+    float terrain_amplification = 1.0f;
 
 private:
 

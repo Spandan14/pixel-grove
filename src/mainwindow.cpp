@@ -39,10 +39,21 @@ void MainWindow::initialize() {
     filters_label->setFont(font);
     QLabel *param1_label = new QLabel(); // Parameter 1 label
     param1_label->setText("Terrain Resolution:");
-    QLabel *near_label = new QLabel(); // Near plane label
-    near_label->setText("X Terrain Scale:");
-    QLabel *far_label = new QLabel(); // Far plane label
-    far_label->setText("Y Terrain Scale:");
+    QLabel *x_scale_label = new QLabel(); // Near plane label
+    x_scale_label->setText("X Terrain Scale:");
+    QLabel *y_scale_label = new QLabel(); // Far plane label
+    y_scale_label->setText("Y Terrain Scale:");
+
+    QLabel *terrainAmplificationLabel = new QLabel(); // Parameter 1 label
+    terrainAmplificationLabel->setText("Terrain Amplification:");
+
+    QLabel *texture_label = new QLabel(); // Parameters label
+    texture_label->setText("Textures");
+    texture_label->setFont(font);
+
+    QLabel *textureStrideLabel = new QLabel(); // Parameter 1 label
+    textureStrideLabel->setText("Texture Stride:");
+
 
 
     // Create checkbox for kernel-based filter
@@ -59,6 +70,12 @@ void MainWindow::initialize() {
 
     QGroupBox *p1Layout = new QGroupBox(); // horizonal slider 1 alignment
     QHBoxLayout *l1 = new QHBoxLayout();
+
+    QGroupBox *textureStrideLayout = new QGroupBox(); // horizonal slider 1 alignment
+    QHBoxLayout *l2 = new QHBoxLayout();
+
+    QGroupBox *terrainAmplificationLayout = new QGroupBox(); // horizonal slider 1 alignment
+    QHBoxLayout *l3 = new QHBoxLayout();
 
     // Create slider controls to control parameters
     timeSlider = new QSlider(Qt::Orientation::Horizontal);
@@ -86,6 +103,30 @@ void MainWindow::initialize() {
     terrainResolutionBox->setSingleStep(1);
     terrainResolutionBox->setValue(100);
 
+    textureStrideSlider = new QSlider(Qt::Orientation::Horizontal); // Parameter 1 slider
+    textureStrideSlider->setTickInterval(1);
+    textureStrideSlider->setMinimum(1);
+    textureStrideSlider->setMaximum(25);
+    textureStrideSlider->setValue(10);
+
+    textureStrideBox = new QSpinBox();
+    textureStrideBox->setMinimum(1);
+    textureStrideBox->setMaximum(25);
+    textureStrideBox->setSingleStep(1);
+    textureStrideBox->setValue(10);
+
+    terrainAmplificationSlider = new QSlider(Qt::Orientation::Horizontal); // Parameter 1 slider
+    terrainAmplificationSlider->setTickInterval(1);
+    terrainAmplificationSlider->setMinimum(1);
+    terrainAmplificationSlider->setMaximum(500);
+    terrainAmplificationSlider->setValue(100);
+
+    terrainAmplificationBox = new QDoubleSpinBox();
+    terrainAmplificationBox->setMinimum(0.01f);
+    terrainAmplificationBox->setMaximum(5.f);
+    terrainAmplificationBox->setSingleStep(0.01f);
+    terrainAmplificationBox->setValue(1.0f);
+
     // Adds the slider and number box to the parameter layouts
     l0->addWidget(timeSlider);
     l0->addWidget(timeBox);
@@ -94,6 +135,14 @@ void MainWindow::initialize() {
     l1->addWidget(terrainResolutionSlider);
     l1->addWidget(terrainResolutionBox);
     p1Layout->setLayout(l1);
+
+    l2->addWidget(textureStrideSlider);
+    l2->addWidget(textureStrideBox);
+    textureStrideLayout->setLayout(l2);
+
+    l3->addWidget(terrainAmplificationSlider);
+    l3->addWidget(terrainAmplificationBox);
+    terrainAmplificationLayout->setLayout(l3);
 
     // Creates the boxes containing the camera sliders and number boxes
     QGroupBox *nearLayout = new QGroupBox(); // horizonal near slider alignment
@@ -142,10 +191,15 @@ void MainWindow::initialize() {
     vLayout->addWidget(tesselation_label);
     vLayout->addWidget(param1_label);
     vLayout->addWidget(p1Layout);
-    vLayout->addWidget(near_label);
+    vLayout->addWidget(x_scale_label);
     vLayout->addWidget(nearLayout);
-    vLayout->addWidget(far_label);
+    vLayout->addWidget(y_scale_label);
     vLayout->addWidget(farLayout);
+    vLayout->addWidget(texture_label);
+    vLayout->addWidget(textureStrideLabel);
+    vLayout->addWidget(textureStrideLayout);
+    vLayout->addWidget(terrainAmplificationLabel);
+    vLayout->addWidget(terrainAmplificationLayout);
     vLayout->addWidget(filters_label);
     vLayout->addWidget(terrainWireframeBox);
     // Extra Credit:
@@ -172,6 +226,8 @@ void MainWindow::connectUIElements() {
     connectTerrainResolution();
     connectXScale();
     connectYScale();
+    connectTextureStride();
+    connectTerrainAmplification();
 }
 
 void MainWindow::connectTerrainWireframe() {
@@ -204,6 +260,18 @@ void MainWindow::connectYScale() {
     connect(yScaleSlider, &QSlider::valueChanged, this, &MainWindow::onValChangeYScaleSlider);
     connect(yScaleBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
             this, &MainWindow::onValChangeYScaleBox);
+}
+
+void MainWindow::connectTextureStride() {
+    connect(textureStrideSlider, &QSlider::valueChanged, this, &MainWindow::onValChangeTextureStrideSlider);
+    connect(textureStrideBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            this, &MainWindow::onValChangeTextureStrideBox);
+}
+
+void MainWindow::connectTerrainAmplification() {
+    connect(terrainAmplificationSlider, &QSlider::valueChanged, this, &MainWindow::onValChangeTerrainAmplificationSlider);
+    connect(terrainAmplificationBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            this, &MainWindow::onValChangeTerrainAmplificationBox);
 }
 
 void MainWindow::onTerrainWireframe() {
@@ -271,5 +339,33 @@ void MainWindow::onValChangeYScaleBox(double newValue) {
     yScaleSlider->setValue(int(newValue * 100.f));
     //yScaleBox->setValue(newValue);
     settings.scaleY = yScaleBox->value();
+    realtime->settingsChanged();
+}
+
+void MainWindow::onValChangeTextureStrideSlider(int newValue) {
+    textureStrideSlider->setValue(newValue);
+    textureStrideBox->setValue(newValue);
+    settings.textureStride = textureStrideSlider->value();
+    realtime->settingsChanged();
+}
+
+void MainWindow::onValChangeTextureStrideBox(int newValue) {
+    textureStrideSlider->setValue(newValue);
+    textureStrideBox->setValue(newValue);
+    settings.textureStride = textureStrideSlider->value();
+    realtime->settingsChanged();
+}
+
+void MainWindow::onValChangeTerrainAmplificationSlider(int newValue) {
+    // terrainAmplificationSlider->setValue(newValue / 10.f);
+    terrainAmplificationBox->setValue(newValue / 100.f);
+    settings.terrainAmplification = terrainAmplificationBox->value();
+    realtime->settingsChanged();
+}
+
+void MainWindow::onValChangeTerrainAmplificationBox(double newValue) {
+    terrainAmplificationSlider->setValue(int(newValue * 100.f));
+    // terrainAmplificationBox->setValue(newValue);
+    settings.terrainAmplification = terrainAmplificationBox->value();
     realtime->settingsChanged();
 }

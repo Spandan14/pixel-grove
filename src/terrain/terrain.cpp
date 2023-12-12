@@ -164,7 +164,14 @@ float TerrainGenerator::getHeight(float x, float y) {
     float z4 = computePerlin(x * 16, y * 16) / 16;
 
     // Return 0 as placeholder
-    return z1 + z2 + z3 + z4;
+    float z = z1 + z2 + z3 + z4;
+    float zScaled = pow(abs(z), terrain_amplification);
+    if (z < 0) {
+        zScaled = -zScaled;
+    }
+
+    return zScaled;
+
 }
 
 // Computes the normal of a vertex by averaging neighbors
