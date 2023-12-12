@@ -1,6 +1,7 @@
 #pragma once
 
 // Defined before including GLEW to suppress deprecation messages on macOS
+#include "src/flowergen/stem.h"
 #include "src/utils/scenedata.h"
 #include "src/utils/sceneparser.h"
 #include "src/camera/camera.h"
@@ -78,5 +79,6 @@ private:
     GLuint cubemapTexture;
     unsigned int loadCubemap(std::vector<std::string> faces);
     Mesh *tulip;
+    Stem * stem;
     int lightTypeToNum(LightType light_type);
 };

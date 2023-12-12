@@ -1,4 +1,5 @@
 #include "stem.h"
+#include <iostream>
 
 Stem::Stem(float height, float radius)
 {
@@ -7,6 +8,7 @@ Stem::Stem(float height, float radius)
     glGenBuffers(1, &m_vbo);
     glGenVertexArrays(1, &m_vao);
     this->genStem();
+    this->bind();
 }
 
 
