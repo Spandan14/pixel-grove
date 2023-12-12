@@ -79,11 +79,6 @@ bool Mesh::loadMesh(){
         else if(strcmp( lineHeader, "f") == 0){
             unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
             int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
-
-            if (matches != 9){
-                printf("Error parsing faces\n");
-                return false;
-            }
             vertices.push_back(vertexIndex[0]);
             vertices.push_back(vertexIndex[1]);
             vertices.push_back(vertexIndex[2]);
@@ -97,7 +92,7 @@ bool Mesh::loadMesh(){
 
 
     }
-    for(unsigned int i; i < vertices.size(); ++i){
+    for(unsigned int i = 0; i < vertices.size(); ++i){
 
         glm::vec3 mesh_vertex = t_vertices[vertices[i] - 1];
         m_mesh.push_back(mesh_vertex.x);
