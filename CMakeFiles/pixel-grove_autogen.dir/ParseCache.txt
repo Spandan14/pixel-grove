@@ -799,6 +799,7 @@ C:/Users/maxgu/CS1230/pixel-grove/src/mainwindow.h
  mdp:C:/Users/maxgu/CS1230/pixel-grove/src/realtime.h
  mdp:C:/Users/maxgu/CS1230/pixel-grove/src/utils/aspectratiowidget/aspectratiowidget.hpp
  mdp:C:/Users/maxgu/CS1230/pixel-grove/src/utils/drawables.h
+ mdp:C:/Users/maxgu/CS1230/pixel-grove/src/utils/emissive_s.h
  mdp:C:/Users/maxgu/CS1230/pixel-grove/src/utils/mesh.h
  mdp:C:/Users/maxgu/CS1230/pixel-grove/src/utils/scenedata.h
  mdp:C:/Users/maxgu/CS1230/pixel-grove/src/utils/sceneparser.h
