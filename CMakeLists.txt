@@ -50,6 +50,8 @@ add_executable(${PROJECT_NAME}
         src/utils/mesh.cpp
         src/flowergen/rose.cpp
         src/flowergen/tulip.cpp
+        src/utils/emissive_s.h
+        src/utils/emissive_s.cpp
 
 )
 
