@@ -197,6 +197,9 @@ void Realtime::paintGL() {
     GLint ks_Location = glGetUniformLocation(m_shader, "k_s");
     glUniform1f(ks_Location, 0.54);
 
+    GLint timeofdayObj = glGetUniformLocation(m_shader, "timeofday");
+    glUniform1f(timeofdayObj, settings.timeOfDay);
+
     GLint camPosLocation = glGetUniformLocation(m_shader, "worldCameraPos");
     glm::vec4 camPos = cam->getCameraPos();
     glUniform4f(camPosLocation, camPos[0], camPos[1], camPos[2], camPos[3]);
