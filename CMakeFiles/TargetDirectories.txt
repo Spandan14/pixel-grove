@@ -1,0 +1,9 @@
+C:/Users/maxgu/CS1230/pixel-grove/CMakeFiles/pixel-grove.dir
+C:/Users/maxgu/CS1230/pixel-grove/CMakeFiles/pixel-grove_other_files.dir
+C:/Users/maxgu/CS1230/pixel-grove/CMakeFiles/StaticGLEW.dir
+C:/Users/maxgu/CS1230/pixel-grove/CMakeFiles/edit_cache.dir
+C:/Users/maxgu/CS1230/pixel-grove/CMakeFiles/rebuild_cache.dir
+C:/Users/maxgu/CS1230/pixel-grove/CMakeFiles/pixel-grove_autogen_timestamp_deps.dir
+C:/Users/maxgu/CS1230/pixel-grove/CMakeFiles/pixel-grove_autogen.dir
+C:/Users/maxgu/CS1230/pixel-grove/CMakeFiles/StaticGLEW_autogen_timestamp_deps.dir
+C:/Users/maxgu/CS1230/pixel-grove/CMakeFiles/StaticGLEW_autogen.dir

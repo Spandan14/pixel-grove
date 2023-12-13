@@ -1,23 +1,25 @@
 #ifndef STEM_H
 #define STEM_H
 
+#include "src/utils/drawables.h"
 #include <vector>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
 
-class Stem
+class Stem : public Drawables
 {
 public:
     Stem(float height, float radius);
 
     void genStem();
 
-    void freeBindings();
+    void freeMesh() override;
+    int getSize() override {return m_stem.size()/6;}
 
     GLuint getVAO();
 
-    void draw(){
+    void drawMesh() override{
         glBindVertexArray(this->m_vao);
         glDrawArrays(GL_TRIANGLES, 0, this->m_stem.size()/ 6);
         glBindVertexArray(0);
@@ -47,14 +49,14 @@ private:
     void makeWedge(float currTheta, float nextTheta);
 
     void makeTile_cap(glm::vec3 topLeft,
-                            glm::vec3 topRight,
-                            glm::vec3 bottomLeft,
-                            glm::vec3 bottomRight,
+                      glm::vec3 topRight,
+                      glm::vec3 bottomLeft,
+                      glm::vec3 bottomRight,
                       bool up);
 
     void makeTile_face(glm::vec3 topLeft,
-                             glm::vec3 topRight,
-                             glm::vec3 bottomLeft,
+                       glm::vec3 topRight,
+                       glm::vec3 bottomLeft,
                        glm::vec3 bottomRight);
 
     float height;

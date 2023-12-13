@@ -32,6 +32,7 @@ add_executable(${PROJECT_NAME}
     src/flowergen/sunflower.h src/flowergen/sunflower.cpp
     src/flowergen/lily.h src/flowergen/lily.cpp
     src/utils/mesh.h src/utils/mesh.cpp
+
       src/main.cpp
       src/realtime.cpp
       src/mainwindow.cpp
@@ -55,7 +56,8 @@ add_executable(${PROJECT_NAME}
   src/camera/camera.h
   src/camera/camera.cpp
 
-  src/flowergen/stem.h src/flowergen/stem.cpp
+  src/utils/stem.h src/utils/stem.cpp
+  src/utils/drawables.h
 
 )
 

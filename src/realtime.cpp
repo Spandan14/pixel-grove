@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include "src/utils/shaderloader.h"
-#include "src/utils/mesh.h"
+#include "src/flowergen/tulip.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -25,23 +25,23 @@ float skyboxVertices[] =
 unsigned int skyboxIndices[] =
     {
         // Right
-        1, 2, 6,
-        6, 5, 1,
+        6, 2, 1,
+        1, 5, 6,
         // Left
-        0, 4, 7,
-        7, 3, 0,
+        7, 4, 0,
+        0, 3, 7,
         // Top
-        4, 5, 6,
-        6, 7, 4,
+        6, 5, 4,
+        4, 7, 6,
         // Bottom
-        0, 3, 2,
-        2, 1, 0,
+        2, 3, 0,
+        0, 1, 2,
         // Back
-        0, 1, 5,
-        5, 4, 0,
+        5, 1, 0,
+        0, 4, 5,
         // Front
-        3, 7, 6,
-        6, 2, 3
+        6, 7, 3,
+        3, 2, 6
 };
 
 Realtime::Realtime(QWidget *parent)
@@ -94,14 +94,13 @@ void Realtime::initializeGL() {
     // Tells OpenGL to only draw the front face
     glEnable(GL_CULL_FACE);
     // Keeps front faces
-    glCullFace(GL_FRONT);
+    glCullFace(GL_BACK);
     // Uses counter clock-wise standard
     glFrontFace(GL_CCW);
     // Tells OpenGL how big the screen is
     glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
-    tulip = new Mesh("resources/assets/tulip.obj");
-    this->stem = new Stem(10, 5);
+    this->tulip = new Tulip();
 
     SceneCameraData cameraData;
     cameraData.look = glm::vec4(0.f, 0.f, -1.f, 0.f);
@@ -208,7 +207,7 @@ void Realtime::paintGL() {
     SceneLightData light;
     light.type = LightType::LIGHT_DIRECTIONAL;
     light.pos = glm::vec4(1.f, 1.f, 1.f, 1.f);
-    light.dir = glm::vec4(0.25, 1, -1, 0.f);
+    light.dir = glm::vec4(0.25, -1, -1, 0.f);
     light.color = glm::vec4(0.5f, 0.5f, 0.5f, 1);
     GLint lightsNum_Location = glGetUniformLocation(m_shader, "lightsNum");
     glUniform1i(lightsNum_Location, 1);
@@ -225,29 +224,7 @@ void Realtime::paintGL() {
     GLint lightType_Location = glGetUniformLocation(m_shader, "lightType[0]");
     glUniform1i(lightType_Location, lightTypeToNum(light.type));
 
-    GLint shininess_Location = glGetUniformLocation(m_shader, "shininess");
-    glUniform1f(shininess_Location, 22.f);
-    glm::vec4 ambientColor = glm::vec4(0.95f, 0.55f, 0.85f, 0.1f);
-    GLint ambient_Location = glGetUniformLocation(m_shader, "ambientColor");
-    glUniform4f(ambient_Location, ambientColor[0], ambientColor[1], ambientColor[2], ambientColor[3]);
-
-    glm::vec4 diffuseColor = glm::vec4(0.95f, 0.55f, 0.85f, 1.f);
-    GLint diffuse_Location = glGetUniformLocation(m_shader, "diffuseColor");
-    glUniform4f(diffuse_Location, diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]);
-
-    glm::vec4 specularColor = glm::vec4(0.5f, 0.5f, 0.5f, 1.f);
-    GLint specular_Location = glGetUniformLocation(m_shader, "specularColor");
-    glUniform4f(specular_Location, specularColor[0], specularColor[1], specularColor[2], specularColor[3]);
-
-    glm::mat4 modelMatrix = glm::mat3(100.f);
-    GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
-    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &modelMatrix[0][0]);
-
-    glm::mat3 inverseCTM = glm::transpose(glm::inverse(glm::mat3(100.f)));
-    GLint inverseCTMLocation = glGetUniformLocation(m_shader, "inverseCTM");
-    glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &inverseCTM[0][0]);
-
-    tulip->drawMesh();
+    this->tulip->drawTulips(m_shader);
 
     glUseProgram(0);
     glDepthFunc(GL_LEQUAL);

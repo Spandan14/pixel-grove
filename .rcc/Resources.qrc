@@ -1,0 +1,15 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="resources/images/back.jpg">C:/Users/maxgu/CS1230/pixel-grove/resources/images/back.jpg</file>
+    <file alias="resources/images/front.jpg">C:/Users/maxgu/CS1230/pixel-grove/resources/images/front.jpg</file>
+    <file alias="resources/images/left.jpg">C:/Users/maxgu/CS1230/pixel-grove/resources/images/left.jpg</file>
+    <file alias="resources/images/right.jpg">C:/Users/maxgu/CS1230/pixel-grove/resources/images/right.jpg</file>
+    <file alias="resources/images/top.jpg">C:/Users/maxgu/CS1230/pixel-grove/resources/images/top.jpg</file>
+    <file alias="resources/images/bottom.jpg">C:/Users/maxgu/CS1230/pixel-grove/resources/images/bottom.jpg</file>
+    <file alias="resources/images/kitten.png">C:/Users/maxgu/CS1230/pixel-grove/resources/images/kitten.png</file>
+    <file alias="resources/shaders/skyblock.frag">C:/Users/maxgu/CS1230/pixel-grove/resources/shaders/skyblock.frag</file>
+    <file alias="resources/shaders/skyblock.vert">C:/Users/maxgu/CS1230/pixel-grove/resources/shaders/skyblock.vert</file>
+    <file alias="resources/assets/tulip.obj">C:/Users/maxgu/CS1230/pixel-grove/resources/assets/tulip.obj</file>
+  </qresource>
+</RCC>
+

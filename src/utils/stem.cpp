@@ -17,7 +17,7 @@ void Stem::genStem(){
     this->setVertexData();
 }
 
-void Stem::freeBindings(){
+void Stem::freeMesh(){
     glDeleteBuffers(1, &m_vbo);
     glDeleteVertexArrays(1, &m_vao);
 }
@@ -96,10 +96,10 @@ void Stem::makeWedge(float currTheta, float nextTheta){
 }
 
 void Stem::makeTile_cap(glm::vec3 topLeft,
-                            glm::vec3 topRight,
-                            glm::vec3 bottomLeft,
-                            glm::vec3 bottomRight,
-                            bool up){
+                        glm::vec3 topRight,
+                        glm::vec3 bottomLeft,
+                        glm::vec3 bottomRight,
+                        bool up){
     glm::vec3 normal = up ? glm::vec3(0, 1, 0) : glm::vec3(0, -1, 0);
 
     insertVec3(m_stem, topLeft);
@@ -117,9 +117,9 @@ void Stem::makeTile_cap(glm::vec3 topLeft,
 
 }
 void Stem::makeTile_face(glm::vec3 topLeft,
-                             glm::vec3 topRight,
-                             glm::vec3 bottomLeft,
-                             glm::vec3 bottomRight){
+                         glm::vec3 topRight,
+                         glm::vec3 bottomLeft,
+                         glm::vec3 bottomRight){
     glm::vec3 normal_tl = glm::normalize(glm::vec3(topLeft[0], 0, topLeft[2]));
     glm::vec3 normal_tr = glm::normalize(glm::vec3(topRight[0], 0, topRight[2]));
     glm::vec3 normal_bl = glm::normalize(glm::vec3(bottomLeft[0], 0, bottomLeft[2]));
