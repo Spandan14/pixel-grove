@@ -130,7 +130,7 @@ struct ScenePrimitive {
     std::string meshfile; // Used for triangle meshes
 };
 
-// Struct which contains data for a transformation.
+// Struct which contains data for a ctm.
 struct SceneTransformation {
     TransformationType type;
 

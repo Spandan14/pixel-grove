@@ -9,25 +9,29 @@
 #include <vector>
 
 
-class Mesh : public Drawables
-{
+class Mesh : public Drawables {
 public:
-    Mesh(const char* filepath);
+    Mesh(const char *filepath);
 
     GLuint getVAO();
+    std::vector<float> getTriangles();
 
     void freeMesh() override;
+
     void drawMesh() override;
-    int getSize() override {return m_mesh.size()/8;}
+
+    int getSize() override { return m_mesh.size() / 8; }
 
 
 private:
     void bindMesh();
+
     bool loadMesh();
-    const char* filepath;
+
+    const char *filepath;
     std::vector<float> m_mesh;
-    GLuint m_vbo;
     GLuint m_vao;
+    GLuint m_vbo;
 
 };
 

@@ -7,7 +7,7 @@
 // Struct which contains data for a single primitive, to be used for rendering
 struct RenderShapeData {
     ScenePrimitive primitive;
-    glm::mat4 ctm{}; // the cumulative transformation matrix
+    glm::mat4 ctm{}; // the cumulative ctm matrix
     glm::mat4 inverseCTM{};
 };
 

@@ -10,8 +10,6 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
 
-#include "src/flowergen/tulip.h"
-
 
 // ================== Project 5: Lights, Camera
 
@@ -236,14 +234,10 @@ void Realtime::setupSkyboxTextures() {
 }
 
 void Realtime::setupFlowers() {
-    m_flower_shader = ShaderLoader::createShaderProgram(":/resources/shaders/phong.vert",
-                                                        ":/resources/shaders/phong.frag");
+    m_flower_shader = ShaderLoader::createShaderProgram(":/resources/shaders/flower.vert",
+                                                        ":/resources/shaders/flower.frag");
 
     glUseProgram(m_flower_shader);
-
-    this->tulip = new Tulip();
-    this->lily = new Lily();
-    this->rose = new Rose();
 
     GLint ka_Location = glGetUniformLocation(m_flower_shader, "k_a");
     glUniform1f(ka_Location, 0.5);
@@ -278,7 +272,61 @@ void Realtime::setupFlowers() {
     GLint lightType_Location = glGetUniformLocation(m_flower_shader, "lightType[0]");
     glUniform1i(lightType_Location, lightTypeToNum(light.type));
 
+    glGenVertexArrays(1, &m_flower_vao);
+
+    glGenBuffers(1, &m_flower_data_vbo);
+    glGenBuffers(1, &m_flower_ctms_vbo);
+    glGenBuffers(1, &m_flower_i_ctms_vbo);
+
     glUseProgram(0);
+}
+
+void Realtime::drawFlowerComponent(std::vector<float> component_tris, std::vector<glm::mat4> ctms,
+                                   std::vector<glm::mat3> i_ctms) {
+    glBindVertexArray(m_flower_vao);
+
+    if (ctms.size() != i_ctms.size()) {
+        throw std::runtime_error("ctms and i_ctms must be the same size, wtf");
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_flower_data_vbo);
+    glBufferData(GL_ARRAY_BUFFER, component_tris.size() * sizeof(GLfloat), component_tris.data(), GL_STATIC_DRAW);
+
+    // vertex position
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), nullptr);
+    // normal position
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+    // uv_crd position
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<void *>(6 * sizeof(GLfloat)));
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_flower_ctms_vbo);
+    glBufferData(GL_ARRAY_BUFFER, ctms.size() * 16 * sizeof(float), ctms.data(), GL_DYNAMIC_DRAW);
+
+    int ctms_loc = 3;
+    for (int i = 0; i < 4; i++) {
+        glEnableVertexAttribArray(ctms_loc + i);
+        glVertexAttribPointer(ctms_loc + i, 4, GL_FLOAT, GL_FALSE,
+                              16 * sizeof(float), reinterpret_cast<void *>(4 * sizeof(float) * i));
+        glVertexAttribDivisor(ctms_loc + i, 1); // instanced vertex attribute
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_flower_i_ctms_vbo);
+    glBufferData(GL_ARRAY_BUFFER, i_ctms.size() * 16 * sizeof(float), i_ctms.data(), GL_DYNAMIC_DRAW);
+    
+    int i_ctms_loc = 7;
+    for (int i = 0; i < 3; i++) {
+        glEnableVertexAttribArray(i_ctms_loc + i);
+        glVertexAttribPointer(i_ctms_loc + i, 3, GL_FLOAT, GL_FALSE,
+                              9 * sizeof(float), reinterpret_cast<void *>(3 * sizeof(float) * i));
+        glVertexAttribDivisor(i_ctms_loc + i, 1); // instanced vertex attribute
+    }
+
+    glDrawArraysInstanced(GL_TRIANGLES, 0, component_tris.size() / 6, (GLsizei) ctms.size());
+
+    glBindVertexArray(0);
 }
 
 void Realtime::paintFlowers() {
@@ -294,18 +342,12 @@ void Realtime::paintFlowers() {
     GLint projectionLocation = glGetUniformLocation(m_flower_shader, "projectionMatrix");
     glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
 
-    for (int i = 0; i < 25; ++i) {
-        for (int j = 0; j<25; ++j) {
-            glm::vec3 newloc = glm::vec3(i * 0.4, 0, j * 0.4);
-            if ((i * 2) % 3 == 0) {
-                this->lily->drawLilies(m_flower_shader, 0, newloc);
-            } else if ((i * 2) % 3 == 1) {
-                this->rose->drawRoses(m_flower_shader, 0, newloc);
-            } else {
-                this->tulip->drawTulips(m_flower_shader, j % 2, newloc);
-            }
-        }
-    }
+    Lily *lily = new Lily();
+    FlowerCTMCollection lily_ctms = Flower::collectCTMs(lily->flowerData);
+
+    drawFlowerComponent(Lily::LILY_FLOWER_MESH->getTriangles(), lily_ctms.flowerCTMs, lily_ctms.flowerInverseCTMS);
+    drawFlowerComponent(Lily::LILY_STEM_MESH->getTriangles(), lily_ctms.stemCTMs, lily_ctms.stemInverseCTMS);
+    drawFlowerComponent(Lily::LILY_LEAF_MESH->getTriangles(), lily_ctms.leafCTMs, lily_ctms.leafInverseCTMS);
 
     glUseProgram(0);
 }

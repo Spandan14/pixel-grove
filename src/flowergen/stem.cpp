@@ -8,7 +8,7 @@ Stem::Stem(float height, float radius)
     glGenBuffers(1, &m_vbo);
     glGenVertexArrays(1, &m_vao);
     this->genStem();
-    this->bind();
+    // this->bind();
 }
 
 
@@ -104,16 +104,27 @@ void Stem::makeTile_cap(glm::vec3 topLeft,
 
     insertVec3(m_stem, topLeft);
     insertVec3(m_stem, normal);
+    insertVec2(m_stem, getCylinderCapUV(topLeft, up));
+
     insertVec3(m_stem, bottomLeft);
     insertVec3(m_stem, normal);
+    insertVec2(m_stem, getCylinderCapUV(bottomLeft, up));
+
     insertVec3(m_stem, bottomRight);
     insertVec3(m_stem, normal);
+    insertVec2(m_stem, getCylinderCapUV(bottomRight, up));
+
     insertVec3(m_stem, topLeft);
     insertVec3(m_stem, normal);
+    insertVec2(m_stem, getCylinderCapUV(topLeft, up));
+
     insertVec3(m_stem, bottomRight);
     insertVec3(m_stem, normal);
+    insertVec2(m_stem, getCylinderCapUV(bottomRight, up));
+
     insertVec3(m_stem, topRight);
     insertVec3(m_stem, normal);
+    insertVec2(m_stem, getCylinderCapUV(topRight, up));
 
 }
 void Stem::makeTile_face(glm::vec3 topLeft,
@@ -128,16 +139,40 @@ void Stem::makeTile_face(glm::vec3 topLeft,
 
     insertVec3(m_stem, topLeft);
     insertVec3(m_stem, normal_tl);
+    insertVec2(m_stem, getCylinderFaceUV(topLeft));
+
     insertVec3(m_stem, bottomLeft);
     insertVec3(m_stem, normal_bl);
+    insertVec2(m_stem, getCylinderFaceUV(bottomLeft));
+
     insertVec3(m_stem, bottomRight);
     insertVec3(m_stem, normal_br);
+    insertVec2(m_stem, getCylinderFaceUV(bottomRight));
+
     insertVec3(m_stem, topLeft);
     insertVec3(m_stem, normal_tl);
+    insertVec2(m_stem, getCylinderFaceUV(topLeft));
+
     insertVec3(m_stem, bottomRight);
     insertVec3(m_stem, normal_br);
+    insertVec2(m_stem, getCylinderFaceUV(bottomRight));
+
     insertVec3(m_stem, topRight);
     insertVec3(m_stem, normal_tr);
+    insertVec2(m_stem, getCylinderFaceUV(topRight));
+}
 
+glm::vec2 Stem::getCylinderFaceUV(glm::vec3 point) {
+    float theta = atan(point.x / point.z) + M_PI / 2.0f;
 
+    if (point.z > 0) {
+        theta += M_PI;
+    }
+
+    return {theta / (2.0f * M_PI), point.y / this->height};
+}
+
+glm::vec2 Stem::getCylinderCapUV(glm::vec3 point, bool up) {
+    return up ? glm::vec2(0.5f + (point.x / this->radius), 0.5f - (point.z / this->radius))
+              : glm::vec2(0.5f + (point.x / this->radius), 0.5f + (point.z / this->radius));
 }

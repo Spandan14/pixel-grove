@@ -161,7 +161,7 @@ Add a new section "2.1.4 Outputs" after "2.1.3 Displays":
     An EGLOutputLayerEXT is an abstract handle representing an element
     of display control hardware which receives image data and processes
     it for display. This processing is hardware-dependent, and may
-    include, but is not limited to, color space transformation, scaling
+    include, but is not limited to, color space ctm, scaling
     and rotation, and composition/blending with images from other
     EGLOutputLayerEXTs. 
 

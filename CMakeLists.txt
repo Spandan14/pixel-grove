@@ -48,10 +48,10 @@ add_executable(${PROJECT_NAME}
         src/skybox/skybox_utils.h
         src/flowergen/stem.cpp
         src/utils/mesh.cpp
-        src/flowergen/rose.cpp
-        src/flowergen/tulip.cpp
         src/utils/emissive_s.h
         src/utils/emissive_s.cpp
+        src/flowergen/flowers.cpp
+        src/utils/ctm_utils.h
 
 )
 
@@ -72,8 +72,8 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   resources/shaders/terrain.vert
   resources/shaders/skybox.frag
   resources/shaders/skybox.vert
-  resources/shaders/phong.frag
-  resources/shaders/phong.vert
+        resources/shaders/flower.frag
+        resources/shaders/flower.vert
   resources/assets/tulip.obj
   resources/assets/t_leaf.obj
 )
