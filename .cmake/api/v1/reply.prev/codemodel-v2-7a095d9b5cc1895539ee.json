@@ -51,7 +51,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "StaticGLEW::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-StaticGLEW-Debug-00dbb0f70c569797c12a.json",
+					"jsonFile" : "target-StaticGLEW-Debug-470a973ebbeeaa344cf0.json",
 					"name" : "StaticGLEW",
 					"projectIndex" : 0
 				},
@@ -72,7 +72,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "pixel-grove::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-pixel-grove-Debug-114f25e3e21fbaedea83.json",
+					"jsonFile" : "target-pixel-grove-Debug-b0f19493eaad671400bc.json",
 					"name" : "pixel-grove",
 					"projectIndex" : 0
 				},

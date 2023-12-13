@@ -307,7 +307,7 @@ build StaticGLEW_autogen/timestamp StaticGLEW_autogen/mocs_compilation.cpp | ${c
 #############################################
 # Phony custom command for CMakeFiles\pixel-grove_autogen_timestamp_deps
 
-build CMakeFiles/pixel-grove_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/pixel-grove_autogen_timestamp_deps: phony C$:/Qt/6.5.2/mingw_64/./bin/moc.exe C$:/Qt/6.5.2/mingw_64/./bin/uic.exe libStaticGLEW.a || StaticGLEW_autogen StaticGLEW_autogen_timestamp_deps libStaticGLEW.a
+build CMakeFiles/pixel-grove_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/pixel-grove_autogen_timestamp_deps: phony C$:/Qt/6.5.2/mingw_64/./bin/moc.exe libStaticGLEW.a C$:/Qt/6.5.2/mingw_64/./bin/uic.exe || StaticGLEW_autogen StaticGLEW_autogen_timestamp_deps libStaticGLEW.a
 
 
 #############################################
