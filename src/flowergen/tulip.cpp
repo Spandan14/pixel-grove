@@ -6,6 +6,11 @@ Tulip::Tulip()
     this->flattenLSystem(tulips, tulips_render);
 }
 
+void Tulip :: freeMeshes(){
+    flower_mesh->freeMesh();
+    tulip_stem->freeMesh();
+}
+
 void Tulip :: genFlowers(){
     this->tulips.push_back(premise());
     this->flattenLSystem(tulips, tulips_render);

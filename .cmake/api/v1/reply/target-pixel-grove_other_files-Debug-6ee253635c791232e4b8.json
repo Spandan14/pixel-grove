@@ -1,0 +1,292 @@
+{
+	"backtrace" : 5,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"_qt_internal_expose_source_file_to_ide",
+			"_qt_internal_process_resource",
+			"qt6_add_resources",
+			"qt_add_resources",
+			"set_property"
+		],
+		"files" : 
+		[
+			"C:/Qt/6.5.2/mingw_64/lib/cmake/Qt6Core/Qt6CoreMacros.cmake",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 65,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 366,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 314,
+				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1725,
+				"parent" : 4
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 6
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 8
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 10
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 12
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 14
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 16
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 18
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 20
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 22
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 24
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 26
+			}
+		]
+	},
+	"id" : "pixel-grove_other_files::@6890427a1f51a3e7e1df",
+	"name" : "pixel-grove_other_files",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Resources",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6
+			]
+		},
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				7,
+				8,
+				9,
+				10
+			]
+		},
+		{
+			"name" : "Object Files",
+			"sourceIndexes" : 
+			[
+				11
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 5,
+			"path" : "resources/images/back.jpg",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 7,
+			"path" : "resources/images/front.jpg",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 9,
+			"path" : "resources/images/left.jpg",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 11,
+			"path" : "resources/images/right.jpg",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 13,
+			"path" : "resources/images/top.jpg",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 15,
+			"path" : "resources/images/bottom.jpg",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 17,
+			"path" : "resources/images/kitten.png",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 19,
+			"path" : "resources/shaders/skyblock.frag",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 21,
+			"path" : "resources/shaders/skyblock.vert",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 23,
+			"path" : "resources/shaders/phong.frag",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 25,
+			"path" : "resources/shaders/phong.vert",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 27,
+			"path" : "resources/assets/tulip.obj",
+			"sourceGroupIndex" : 2
+		}
+	],
+	"type" : "UTILITY"
+}

@@ -65,6 +65,7 @@ void Realtime::finish() {
     this->makeCurrent();
 
     // Students: anything requiring OpenGL calls when the program exits should be done here
+    this->tulip->freeMeshes();
     glDeleteProgram(m_skyblock_shader);
     glUseProgram(0);
     this->doneCurrent();
@@ -184,6 +185,7 @@ void Realtime::initializeGL() {
 
 void Realtime::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     glUseProgram(m_shader);
 
     GLint ka_Location = glGetUniformLocation(m_shader, "k_a");
@@ -228,6 +230,7 @@ void Realtime::paintGL() {
     this->tulip->drawTulips(m_shader);
 
     glUseProgram(0);
+
     glDepthFunc(GL_LEQUAL);
 
     glUseProgram(m_skyblock_shader);
@@ -250,17 +253,19 @@ void Realtime::paintGL() {
 }
 
 int Realtime::lightTypeToNum(LightType light_type){
+    int return_num;
     switch(light_type){
     case LightType::LIGHT_DIRECTIONAL:
-        return 0;
+        return_num = 0;
         break;
     case LightType::LIGHT_POINT:
-        return 1;
+        return_num = 1;
         break;
     case LightType::LIGHT_SPOT:
-        return 2;
+        return_num = 2;
         break;
     }
+    return return_num;
 }
 
 void Realtime::resizeGL(int w, int h) {
@@ -321,7 +326,7 @@ void Realtime::timerEvent(QTimerEvent *event) {
     m_elapsedTimer.restart();
 
     // Use deltaTime and m_keyMap here to move around
-    float speed = 5.f * deltaTime;
+    float speed = 1.f * deltaTime;
     cam->updatePos(m_keyMap, speed);
 
     update(); // asks for a PaintGL() call to occur

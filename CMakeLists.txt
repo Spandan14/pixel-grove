@@ -75,14 +75,10 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   resources/images/kitten.png
   resources/shaders/skyblock.frag
   resources/shaders/skyblock.vert
+  resources/shaders/phong.frag
+  resources/shaders/phong.vert
   resources/assets/tulip.obj
 
-)
-
-target_sources(pixel-grove_other_files
-  PRIVATE
-    resources/shaders/phong.frag
-    resources/shaders/phong.vert
 )
 
 # GLEW: this creates its library and allows you to `#include "GL/glew.h"`

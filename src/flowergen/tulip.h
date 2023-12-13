@@ -12,6 +12,8 @@ public:
     Tulip();
     void genFlowers() override;
     void drawTulip(GLuint m_shader);
+
+    void freeMeshes() override;
     GLuint getFlowerVAO() override {return this->m_flower;}
     SceneMaterial getFlowerMat() override {return this->flower_mat;}
     GLuint getStemVAO() override {return this->m_stem;}
@@ -37,7 +39,7 @@ private:
     float decay = 1;
     Stem* tulip_stem = new Stem(height, radius);
     GLuint m_stem = tulip_stem->getVAO();
-    SceneMaterial stem_mat {SceneColor(0, 1, 0, 0), SceneColor(0, 1, 0, 0), SceneColor(1, 1, 1, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    SceneMaterial stem_mat {SceneColor(0, 0.8, 0, 0), SceneColor(0, 0.8, 0, 0), SceneColor(0.5, 0.5, 0.5, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     glm::mat4 f_step =   glm::mat4(1.0, 0.0, 0.0, 0.0,
                                  0.0, 1.0, 0.0, 0.0,
