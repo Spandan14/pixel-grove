@@ -94,4 +94,15 @@ private:
     Emissive_S * sphere;
 
     int lightTypeToNum(LightType light_type);
+
+    void paintTexture(GLuint texture, bool perPixel, bool kernelBased);
+    void makeFBO();
+    int m_screen_width;
+    int m_screen_height;
+    int m_fbo_width;
+    int m_fbo_height;
+    GLuint m_fbo_texture;
+    GLuint m_fbo_renderbuffer;
+    GLuint m_fbo;
+    GLuint m_defaultFBO;
 };

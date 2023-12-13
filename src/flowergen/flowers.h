@@ -61,6 +61,9 @@ class Flower{
                 GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
                 glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &position[0][0]);
 
+                GLint emisbool_l = glGetUniformLocation(m_shader, "emisbool");
+                glUniform1i(emisbool_l, false);
+
 
                 GLint inverseCTMLocation = glGetUniformLocation(m_shader, "inverseCTM");
                 glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &flowers[i].ictm[0][0]);

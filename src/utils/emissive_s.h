@@ -16,6 +16,9 @@ public:
     void freeMesh() override ;
     void drawMesh() override;
     int getSize() override {return m_vertexData.size()/6;}
+    glm::mat4 getCTM();
+    glm::mat3 getiCTM();
+    void passUniforms(GLuint m_shader);
 private:
     void bindMesh();
     void insertVec3(std::vector<float> &data, glm::vec3 v);
@@ -28,11 +31,15 @@ private:
     void makeSphere();
 
     std::vector<float> m_vertexData;
-    float m_radius = 0.01;
+    float m_radius = 0.005;
     GLuint m_vbo;
     GLuint m_vao;
-
+    glm::mat4 CTM;
+    glm::mat3 iCTM;
+    glm::vec4 location;
     SceneLightData s_light;
+    SceneMaterial sphereMaterial;
+
 };
 
 #endif // EMISSIVE_S_H

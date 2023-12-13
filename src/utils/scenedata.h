@@ -112,6 +112,7 @@ struct SceneMaterial {
     float shininess;      // Specular exponent
 
     SceneColor cEmissive;
+    bool emissive = false;
     void clear()
     {
         cAmbient = glm::vec4(0);
@@ -120,6 +121,7 @@ struct SceneMaterial {
         shininess = 0;
 
         cEmissive = glm::vec4(0);
+        emissive = false;
     }
 };
 

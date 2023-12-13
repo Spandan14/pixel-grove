@@ -79,6 +79,10 @@ void Realtime::initializeGL() {
 
     m_timer = startTimer(1000/60);
     m_elapsedTimer.start();
+    m_screen_width = size().width() * m_devicePixelRatio;
+    m_screen_height = size().height() * m_devicePixelRatio;
+    m_fbo_height = m_screen_height;
+    m_fbo_width = m_screen_width;
 
     // Initializing GL.
     // GLEW (GL Extension Wrangler) provides access to OpenGL functions.
@@ -92,6 +96,8 @@ void Realtime::initializeGL() {
     m_shader = ShaderLoader::createShaderProgram("resources/shaders/phong.vert", "resources/shaders/phong.frag");
     m_skyblock_shader = ShaderLoader::createShaderProgram("resources/shaders/skyblock.vert",
                                                           "resources/shaders/skyblock.frag");
+    m_texture_shader = ShaderLoader::createShaderProgram("resources/shaders/texture.vert", "resources/shaders/texture.frag");
+
     std::cout<<"shaders loaded"<<std::endl;
     // Allows OpenGL to draw objects appropriately on top of one another
     glEnable(GL_DEPTH_TEST);
@@ -107,7 +113,7 @@ void Realtime::initializeGL() {
     this->tulip = new Tulip();
     this->lily = new Lily();
     this->rose = new Rose();
-    this->sphere = new Emissive_S(glm::vec4(0.2, 0.2, 0.2, 1), lights);
+    this->sphere = new Emissive_S(glm::vec4(0.7, 0.7, 0.7, 1.f), lights);
 
     this->flowerTypes = {tulip, lily, rose};
 
@@ -194,6 +200,48 @@ void Realtime::initializeGL() {
             stbi_image_free(data);
         }
     }
+    glUseProgram(m_texture_shader);
+    GLint textureLocation = glGetUniformLocation(m_texture_shader, "myTexture");
+    glUniform1i(textureLocation, 0);
+    glUseProgram(0);
+    std::vector<GLfloat> fullscreen_quad_data =
+        { //     POSITIONS    //
+            // Vertex 1 (top left)
+            -1.f,  1.f, 0.0f,
+            0.f, 1.f,
+            //  Vertex 2 (bottom left)
+            -1.f, -1.f, 0.0f,
+            0.f, 0.f,
+            // Vertex 3 (bottom right)
+            1.f, -1.f, 0.0f,
+            1.f, 0.f,
+            // Vertex 4 (top right)
+            1.f,  1.f, 0.0f,
+            1.f, 1.f,
+            // Vertex 5 (top left)
+            -1.f,  1.f, 0.0f,
+            0.f, 1.f,
+            // Vertex 6 (bottom right)
+            1.f, -1.f, 0.0f,
+            1.f, 0.f
+        };
+
+    glGenBuffers(1, &m_fullscreen_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_fullscreen_vbo);
+    glBufferData(GL_ARRAY_BUFFER, fullscreen_quad_data.size()*sizeof(GLfloat), fullscreen_quad_data.data(), GL_STATIC_DRAW);
+    glGenVertexArrays(1, &m_fullscreen_vao);
+    glBindVertexArray(m_fullscreen_vao);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), nullptr);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), reinterpret_cast<void*>(3 * sizeof(GLfloat)));
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    makeFBO();
+
     initialized = true;
 }
 
@@ -268,13 +316,13 @@ void Realtime::paintGL() {
     glm::vec3 origin(0, 0, 0);
     rose->drawRoses(m_shader, 0, origin);
 
-    glm::mat4 m_sphere_model = glm::mat4(1.f);
     GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
-    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &m_sphere_model[0][0]);
+    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &sphere->getCTM()[0][0]);
 
-    glm::mat3 m_sphere_inverseCTM = glm::transpose(glm::inverse(glm::mat3(m_sphere_model)));
     GLint inverseCTMLocation = glGetUniformLocation(m_shader, "inverseCTM");
-    glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &m_sphere_inverseCTM[0][0]);
+    glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &sphere->getiCTM()[0][0]);
+
+    sphere->passUniforms(m_shader);
 
     sphere->drawMesh();
 
@@ -283,7 +331,7 @@ void Realtime::paintGL() {
     glDepthFunc(GL_LEQUAL);
 
     glUseProgram(m_skyblock_shader);
-    glm::mat4 view = cam->getViewMatrix();//glm::mat4(glm::mat3(cam->getViewMatrix()));
+    glm::mat4 view = glm::mat4(glm::mat3(cam->getViewMatrix()));
     glm::mat4 projection = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "view"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "projection"), 1, GL_FALSE, &projection[0][0]);
@@ -299,6 +347,56 @@ void Realtime::paintGL() {
 
     glDepthFunc(GL_LESS);
     glUseProgram(0);
+}
+
+void Realtime::paintTexture(GLuint texture, bool perPixel, bool kernelBased){
+    glUseProgram(m_texture_shader);
+    GLuint perPixel_Location = glGetUniformLocation(m_texture_shader, "perPixel");
+    glUniform1i(perPixel_Location, perPixel);
+
+    GLuint kernelBased_Location = glGetUniformLocation(m_texture_shader, "kernelBased");
+    glUniform1i(kernelBased_Location, kernelBased);
+
+    GLuint screen_width_Location = glGetUniformLocation(m_texture_shader, "screen_width");
+    glUniform1i(screen_width_Location, m_screen_width);
+    GLuint screen_height_Location = glGetUniformLocation(m_texture_shader, "screen_height");
+    glUniform1i(screen_height_Location, m_screen_height);
+
+    glBindVertexArray(m_fullscreen_vao);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
+    glUseProgram(0);
+}
+
+void Realtime::makeFBO(){
+    glGenTextures(1, &m_fbo_texture);
+    glActiveTexture(GL_TEXTURE0);
+
+    glBindTexture(GL_TEXTURE_2D, m_fbo_texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_fbo_width, m_fbo_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glGenRenderbuffers(1, &m_fbo_renderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_fbo_renderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_fbo_width, m_fbo_height);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+    glGenFramebuffers(1, &m_fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fbo_texture, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_fbo_renderbuffer);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFBO);
 }
 
 int Realtime::lightTypeToNum(LightType light_type){

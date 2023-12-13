@@ -2,15 +2,37 @@
 #include <iostream>
 
 Emissive_S::Emissive_S(glm::vec4 location, std::vector<SceneLightData>& lights){
+    this->location = location;
     this->setVertexData();
     glGenBuffers(1, &m_vbo);
     glGenVertexArrays(1, &m_vao);
     this->s_light.type = LightType::LIGHT_POINT;
     this->s_light.pos = location;
+    this->s_light.color = glm::vec4(1.f, 1.f, 1.f, 1.f);
     this->s_light.function = glm::vec3(0.5, 0.5, 0.5);
+
+    sphereMaterial.cEmissive = glm::vec4(1.f);
+    sphereMaterial.emissive = true;
+    sphereMaterial.cAmbient = glm::vec4(1.f);
+    sphereMaterial.cDiffuse = glm::vec4(0.f);
+    sphereMaterial.cSpecular = glm::vec4(1.f);
+    sphereMaterial.shininess = 20.f;
+
+
     lights.push_back(s_light);
     std::cout<<m_vertexData.size()<<std::endl;
     this->bindMesh();
+}
+
+glm::mat4 Emissive_S::getCTM(){
+    return glm::mat4(1.f, 0.f, 0.f, 0.f,
+                    0.f, 1.f, 0.f, 0.f,
+                    0.f, 0.f, 1.f, 0.f,
+                    this->location[0], this->location[1], this->location[2], 1.f);
+}
+
+glm::mat3 Emissive_S::getiCTM(){
+    return glm::transpose(glm::inverse(glm::mat3(getCTM())));
 }
 
 void Emissive_S::freeMesh(){
@@ -18,7 +40,29 @@ void Emissive_S::freeMesh(){
     glDeleteVertexArrays(1, &m_vao);
 }
 
+void Emissive_S::passUniforms(GLuint m_shader){
+    GLint shininess_Location = glGetUniformLocation(m_shader, "shininess");
+    glUniform1f(shininess_Location, sphereMaterial.shininess);
+
+    GLint ambient_Location = glGetUniformLocation(m_shader, "ambientColor");
+    glUniform4fv(ambient_Location, 1, &sphereMaterial.cAmbient[0]);
+
+    GLint diffuse_Location = glGetUniformLocation(m_shader, "diffuseColor");
+    glUniform4fv(diffuse_Location, 1, &sphereMaterial.cDiffuse[0]);
+
+    GLint specular_Location = glGetUniformLocation(m_shader, "specularColor");
+    glUniform4fv(specular_Location, 1, &sphereMaterial.cSpecular[0]);
+
+    GLint emissive_Location = glGetUniformLocation(m_shader, "emissive");
+    glUniform4fv(emissive_Location, 1, &sphereMaterial.cEmissive[0]);
+
+    GLint emisbool_l = glGetUniformLocation(m_shader, "emisbool");
+    glUniform1i(emisbool_l, sphereMaterial.emissive);
+}
+
 void Emissive_S::drawMesh(){
+
+
     glBindVertexArray(this->m_vao);
     glDrawArrays(GL_TRIANGLES, 0, this->m_vertexData.size() / 6);
     glBindVertexArray(0);
@@ -64,7 +108,7 @@ void Emissive_S::makeTile(glm::vec3 topLeft,
 }
 
 void Emissive_S::makeWedge(float currentTheta, float nextTheta) {
-    float r = 0.1f;
+    float r = 0.05f;
     float phiStep = M_PI/10.f;
 
     for(int i = 0; i < 10; ++i) {

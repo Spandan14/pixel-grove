@@ -83,6 +83,12 @@ qt_add_resources(${PROJECT_NAME} "Resources"
 
 )
 
+target_sources(pixel-grove_other_files
+  PRIVATE
+    resources/shaders/texture.vert
+    resources/shaders/texture.frag
+)
+
 # GLEW: this creates its library and allows you to `#include "GL/glew.h"`
 add_library(StaticGLEW STATIC glew/src/glew.c
 

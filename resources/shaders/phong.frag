@@ -9,6 +9,8 @@ uniform float k_a;
 uniform vec4 ambientColor;
 uniform vec4 diffuseColor;
 uniform vec4 specularColor;
+uniform vec4 emissive;
+uniform bool emisbool;
 
 uniform float k_d;
 uniform float timeofday;
@@ -33,6 +35,7 @@ float falloff(float x, float innerAngle, float outerAngle){
 
 void main() {
     fragColor = vec4(0.0);
+
     fragColor = k_a * ambientColor;
     vec3 E = normalize(vec3(worldCameraPos) -worldPosition);
 
@@ -58,4 +61,8 @@ void main() {
     fragColor = vec4(clamp(0.f, 1.f, fragColor[0] - (timeofday * 0.02)),
                     clamp(0.f, 1.f, fragColor[1] - (timeofday * 0.02)),
                     clamp(0.f, 1.f, fragColor[2] - (timeofday * 0.02)), fragColor[3]);
+
+    if(emisbool == true){
+        fragColor = emissive;
+    }
 }
