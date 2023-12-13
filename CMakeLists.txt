@@ -29,7 +29,7 @@ add_executable(${PROJECT_NAME}
     src/flowergen/flowers.h
     src/flowergen/rose.h src/flowergen/rose.cpp
     src/flowergen/tulip.h src/flowergen/tulip.cpp
-    src/flowergen/sunflower.h src/flowergen/sunflower.cpp
+
     src/flowergen/lily.h src/flowergen/lily.cpp
     src/utils/mesh.h src/utils/mesh.cpp
 

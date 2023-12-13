@@ -182,6 +182,18 @@
 				"file" : 0,
 				"line" : 1735,
 				"parent" : 26
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1937,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 1735,
+				"parent" : 28
 			}
 		]
 	},
@@ -221,7 +233,8 @@
 			"name" : "Object Files",
 			"sourceIndexes" : 
 			[
-				11
+				11,
+				12
 			]
 		}
 	],
@@ -285,6 +298,11 @@
 		{
 			"backtrace" : 27,
 			"path" : "resources/assets/tulip.obj",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 29,
+			"path" : "resources/assets/t_leaf.obj",
 			"sourceGroupIndex" : 2
 		}
 	],

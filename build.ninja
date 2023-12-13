@@ -73,14 +73,6 @@ build CMakeFiles/pixel-grove.dir/src/flowergen/tulip.cpp.obj: CXX_COMPILER__pixe
   OBJECT_DIR = CMakeFiles\pixel-grove.dir
   OBJECT_FILE_DIR = CMakeFiles\pixel-grove.dir\src\flowergen
 
-build CMakeFiles/pixel-grove.dir/src/flowergen/sunflower.cpp.obj: CXX_COMPILER__pixel-grove_Debug C$:/Users/maxgu/CS1230/pixel-grove/src/flowergen/sunflower.cpp || cmake_object_order_depends_target_pixel-grove
-  DEFINES = -DGLEW_STATIC -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGLWIDGETS_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
-  DEP_FILE = CMakeFiles\pixel-grove.dir\src\flowergen\sunflower.cpp.obj.d
-  FLAGS = -Wno-volatile -g -std=gnu++20
-  INCLUDES = -IC:/Users/maxgu/CS1230/pixel-grove -IC:/Users/maxgu/CS1230/pixel-grove/pixel-grove_autogen/include -IC:/Users/maxgu/CS1230/pixel-grove/pixel-grove -IC:/Users/maxgu/CS1230/pixel-grove/PRIVATE -IC:/Users/maxgu/CS1230/pixel-grove/glew/include -isystem C:/Qt/6.5.2/mingw_64/include/QtCore -isystem C:/Qt/6.5.2/mingw_64/include -isystem C:/Qt/6.5.2/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.5.2/mingw_64/include/QtWidgets -isystem C:/Qt/6.5.2/mingw_64/include/QtGui -isystem C:/Qt/6.5.2/mingw_64/include/QtOpenGL -isystem C:/Qt/6.5.2/mingw_64/include/QtOpenGLWidgets
-  OBJECT_DIR = CMakeFiles\pixel-grove.dir
-  OBJECT_FILE_DIR = CMakeFiles\pixel-grove.dir\src\flowergen
-
 build CMakeFiles/pixel-grove.dir/src/flowergen/lily.cpp.obj: CXX_COMPILER__pixel-grove_Debug C$:/Users/maxgu/CS1230/pixel-grove/src/flowergen/lily.cpp || cmake_object_order_depends_target_pixel-grove
   DEFINES = -DGLEW_STATIC -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGLWIDGETS_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\pixel-grove.dir\src\flowergen\lily.cpp.obj.d
@@ -169,7 +161,7 @@ build CMakeFiles/pixel-grove.dir/.rcc/qrc_Resources.cpp.obj: CXX_COMPILER__pixel
 #############################################
 # Link the executable pixel-grove.exe
 
-build pixel-grove.exe: CXX_EXECUTABLE_LINKER__pixel-grove_Debug CMakeFiles/pixel-grove.dir/pixel-grove_autogen/mocs_compilation.cpp.obj CMakeFiles/pixel-grove.dir/src/flowergen/rose.cpp.obj CMakeFiles/pixel-grove.dir/src/flowergen/tulip.cpp.obj CMakeFiles/pixel-grove.dir/src/flowergen/sunflower.cpp.obj CMakeFiles/pixel-grove.dir/src/flowergen/lily.cpp.obj CMakeFiles/pixel-grove.dir/src/utils/mesh.cpp.obj CMakeFiles/pixel-grove.dir/src/main.cpp.obj CMakeFiles/pixel-grove.dir/src/realtime.cpp.obj CMakeFiles/pixel-grove.dir/src/mainwindow.cpp.obj CMakeFiles/pixel-grove.dir/src/settings.cpp.obj CMakeFiles/pixel-grove.dir/src/utils/sceneparser.cpp.obj CMakeFiles/pixel-grove.dir/src/camera/camera.cpp.obj CMakeFiles/pixel-grove.dir/src/utils/stem.cpp.obj CMakeFiles/pixel-grove.dir/.rcc/qrc_Resources.cpp.obj | libStaticGLEW.a C$:/Qt/6.5.2/mingw_64/lib/libQt6OpenGLWidgets.a C$:/Qt/6.5.2/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.5.2/mingw_64/lib/libQt6OpenGL.a C$:/Qt/6.5.2/mingw_64/lib/libQt6Gui.a C$:/Qt/6.5.2/mingw_64/lib/libQt6Core.a || libStaticGLEW.a pixel-grove_autogen pixel-grove_autogen_timestamp_deps
+build pixel-grove.exe: CXX_EXECUTABLE_LINKER__pixel-grove_Debug CMakeFiles/pixel-grove.dir/pixel-grove_autogen/mocs_compilation.cpp.obj CMakeFiles/pixel-grove.dir/src/flowergen/rose.cpp.obj CMakeFiles/pixel-grove.dir/src/flowergen/tulip.cpp.obj CMakeFiles/pixel-grove.dir/src/flowergen/lily.cpp.obj CMakeFiles/pixel-grove.dir/src/utils/mesh.cpp.obj CMakeFiles/pixel-grove.dir/src/main.cpp.obj CMakeFiles/pixel-grove.dir/src/realtime.cpp.obj CMakeFiles/pixel-grove.dir/src/mainwindow.cpp.obj CMakeFiles/pixel-grove.dir/src/settings.cpp.obj CMakeFiles/pixel-grove.dir/src/utils/sceneparser.cpp.obj CMakeFiles/pixel-grove.dir/src/camera/camera.cpp.obj CMakeFiles/pixel-grove.dir/src/utils/stem.cpp.obj CMakeFiles/pixel-grove.dir/.rcc/qrc_Resources.cpp.obj | libStaticGLEW.a C$:/Qt/6.5.2/mingw_64/lib/libQt6OpenGLWidgets.a C$:/Qt/6.5.2/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.5.2/mingw_64/lib/libQt6OpenGL.a C$:/Qt/6.5.2/mingw_64/lib/libQt6Gui.a C$:/Qt/6.5.2/mingw_64/lib/libQt6Core.a || libStaticGLEW.a pixel-grove_autogen pixel-grove_autogen_timestamp_deps
   FLAGS = -Wno-volatile -g
   LINK_LIBRARIES = libStaticGLEW.a  -lopengl32  -lglu32  C:/Qt/6.5.2/mingw_64/lib/libQt6OpenGLWidgets.a  C:/Qt/6.5.2/mingw_64/lib/libQt6Widgets.a  C:/Qt/6.5.2/mingw_64/lib/libQt6OpenGL.a  C:/Qt/6.5.2/mingw_64/lib/libQt6Gui.a  C:/Qt/6.5.2/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -ld3d11  -ldxgi  -ldxguid  -ldcomp  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\pixel-grove.dir

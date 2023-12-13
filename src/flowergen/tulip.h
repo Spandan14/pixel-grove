@@ -12,19 +12,17 @@ public:
     Tulip();
     void freeMeshes() override;
     GLuint getFlowerVAO() override {return this->m_flower;}
-    SceneMaterial getFlowerMat() override {return this->flower_mat;}
     GLuint getStemVAO() override {return this->m_stem;}
-    SceneMaterial getStemMat() override {return this->stem_mat;}
     GLuint getLeafVAO() override {return this->m_leaf;}
-    SceneMaterial getLeafMat() override {return this->leaf_mat;}
 
-    void drawTulips(GLuint m_shader) {drawMesh(m_shader, tulips_render[0]);}
+    void drawTulips(GLuint m_shader, int index, glm::vec3& location) {drawMesh(m_shader, tulips_render[index], location);}
 
 private:
     //flower
     Mesh* flower_mesh = new Mesh("resources/assets/tulip.obj");
     GLuint m_flower = flower_mesh->getVAO();
     SceneMaterial flower_mat {SceneColor(0.98, 0.59, 0.39, 0), SceneColor(0.98, 0.59, 0.39, 0), SceneColor(0, 0,0, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    SceneMaterial flower_mat_2 {SceneColor(1, 0.71, 0.76, 0), SceneColor(1, 0.71, 0.76, 0), SceneColor(0, 0,0, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     //leaf
     Mesh* leaf_mesh = new Mesh("resources/assets/t_leaf.obj");
@@ -45,7 +43,7 @@ private:
 
     //L-system
     std::vector<L_node *> tulips;
-    L_node * premise();
+    L_node * premise(SceneMaterial& color);
     L_node * rule1(int number = 1, L_node * next = nullptr);
 
     //turning angles

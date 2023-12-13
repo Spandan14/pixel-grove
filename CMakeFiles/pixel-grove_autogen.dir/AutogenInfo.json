@@ -390,12 +390,6 @@
 			null
 		],
 		[
-			"C:/Users/maxgu/CS1230/pixel-grove/src/flowergen/sunflower.h",
-			"MU",
-			"NUENGHOHXD/moc_sunflower.cpp",
-			null
-		],
-		[
 			"C:/Users/maxgu/CS1230/pixel-grove/src/flowergen/tulip.h",
 			"MU",
 			"NUENGHOHXD/moc_tulip.cpp",
@@ -553,11 +547,6 @@
 		],
 		[
 			"C:/Users/maxgu/CS1230/pixel-grove/src/flowergen/rose.cpp",
-			"MU",
-			null
-		],
-		[
-			"C:/Users/maxgu/CS1230/pixel-grove/src/flowergen/sunflower.cpp",
 			"MU",
 			null
 		],

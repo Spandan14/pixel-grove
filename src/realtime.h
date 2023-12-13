@@ -80,8 +80,11 @@ private:
     GLuint skyboxVBO;
     GLuint cubemapTexture;
     unsigned int loadCubemap(std::vector<std::string> faces);
-    Lily *tulip;
+    Lily *lily;
+    Tulip *tulip;
+    Rose *rose;
     Stem * stem;
+    std::vector<Flower *> flowerTypes;
 
 
     int lightTypeToNum(LightType light_type);

@@ -16,12 +16,14 @@ enum class Flower_Component{
 struct L_node {
     Flower_Component type;
     glm::mat4 transformation;
+    SceneMaterial& mat;
     std::vector<L_node*> children;
     int size;
 };
 
 struct flowerData{
     glm::mat4 transformation;
+    glm::mat3 ictm;
     SceneMaterial mat;
     GLuint vao;
     int size;
@@ -38,7 +40,7 @@ class Flower{
                 flattened.push_back(flattened_flower);
             }
         }
-        void drawMesh(GLuint m_shader, std::vector<flowerData>& flowers){
+        void drawMesh(GLuint m_shader, std::vector<flowerData>& flowers, glm::vec3& location){
             for(int i = 0; i < flowers.size(); ++i){
 
                 GLint shininess_Location = glGetUniformLocation(m_shader, "shininess");
@@ -51,25 +53,25 @@ class Flower{
 
                 GLint specular_Location = glGetUniformLocation(m_shader, "specularColor");
                 glUniform4fv(specular_Location, 1, &flowers[i].mat.cSpecular[0]);
-
+                glm::mat4 position = glm::mat4(
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    location.x, location.y, location.z, 1) * flowers[i].transformation;
                 GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
-                glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &flowers[i].transformation[0][0]);
+                glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &position[0][0]);
 
-                glm::mat3 inverseCTM = glm::transpose(glm::inverse(glm::mat3(flowers[i].transformation)));
+
                 GLint inverseCTMLocation = glGetUniformLocation(m_shader, "inverseCTM");
-                glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &inverseCTM[0][0]);
-
+                glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &flowers[i].ictm[0][0]);
                 glBindVertexArray(flowers[i].vao);
                 glDrawArrays(GL_TRIANGLES, 0, flowers[i].size);
                 glBindVertexArray(0);
             }
         }
         virtual GLuint getFlowerVAO() = 0;
-        virtual SceneMaterial getFlowerMat()= 0;
         virtual GLuint getStemVAO() = 0;
-        virtual SceneMaterial getStemMat()= 0;
         virtual GLuint getLeafVAO() = 0;
-        virtual SceneMaterial getLeafMat() = 0;
         glm::mat4 rotate_about(glm::vec4 axis, float theta){
             glm::mat4 rotate = glm::mat4(
                 glm::cos(theta) + pow(axis[0], 2) * (1 - glm::cos(theta)), axis[1] * axis[0] * (1 - glm::cos(theta)) + axis[2] * glm::sin(theta), axis[0] * axis[2] * (1 - glm::cos(theta)) - axis[1] * glm::sin(theta), 0,
@@ -83,20 +85,17 @@ class Flower{
             ctm *= flower_data->transformation;
             flowerData parsed;
             parsed.transformation = ctm;
-
+            parsed.ictm = glm::transpose(glm::inverse(glm::mat3(ctm)));
             parsed.size = flower_data->size;
+            parsed.mat = flower_data->mat;
             switch(flower_data->type){
-
             case(Flower_Component::FLOWER):
-                parsed.mat = getFlowerMat();
                 parsed.vao = getFlowerVAO();
                 break;
             case(Flower_Component::STEM):
-                parsed.mat = getStemMat();
                 parsed.vao = getStemVAO();
                 break;
             case(Flower_Component::LEAF):
-                parsed.mat = getLeafMat();
                 parsed.vao = getLeafVAO();
                 break;
             }

@@ -11,13 +11,10 @@ public:
     Lily();
     void freeMeshes() override;
     GLuint getFlowerVAO() override {return this->m_flower;}
-    SceneMaterial getFlowerMat() override {return this->flower_mat;}
     GLuint getStemVAO() override {return this->m_stem;}
-    SceneMaterial getStemMat() override {return this->stem_mat;}
     GLuint getLeafVAO() override {return this->m_leaf;}
-    SceneMaterial getLeafMat() override {return this->leaf_mat;}
 
-    void drawLilies(GLuint m_shader) {drawMesh(m_shader, lilies_render[0]);}
+    void drawLilies(GLuint m_shader, int index, glm::vec3& location) {drawMesh(m_shader, lilies_render[index], location);}
 
 private:
     //flower

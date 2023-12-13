@@ -16,6 +16,7 @@ L_node * Rose::premise(){
     L_node * final_flower = new L_node{
         Flower_Component::FLOWER,
         f_step,
+        this->flower_mat,
         no_branches,
         flower_mesh->getSize()
 
@@ -24,6 +25,7 @@ L_node * Rose::premise(){
     std::vector<L_node *> next{        new L_node{
             Flower_Component::STEM,
                 f_step,
+                this->stem_mat,
                 std::vector<L_node *>{rule1(1, final_flower)},
                 rose_stem->getSize()
     }};
@@ -31,6 +33,7 @@ L_node * Rose::premise(){
     L_node * start = new L_node {
         Flower_Component::STEM,
         rotate_about(glm::vec4(0, 0, 1, 0), -angle/10),
+        this->stem_mat,
         next,
         rose_stem->getSize()};
     return start;
@@ -43,6 +46,7 @@ L_node * Rose::rule1(int number, L_node * next){
         L_node * branch = new L_node{
             Flower_Component::STEM,
             transform,
+            this->stem_mat,
             std::vector<L_node *> {number > 0 ? rule1(number - 1, next) : next},
             rose_stem->getSize()
         };
@@ -51,6 +55,7 @@ L_node * Rose::rule1(int number, L_node * next){
     L_node * stem = new L_node{
         Flower_Component::STEM,
         f_step * rotate_about(glm::vec4(0, 0, 1, 0), angle/5),
+        this->stem_mat,
         branches,
         rose_stem->getSize()
     };

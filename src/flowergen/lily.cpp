@@ -20,12 +20,14 @@ L_node * Lily::rule1(int number){
     L_node * flower = new L_node{
         Flower_Component::FLOWER,
         f_step * rotate_about(glm::vec4(1, 0, 0, 0),  angle/2),
+        this->flower_mat,
         std::vector<L_node *>{},
         flower_mesh->getSize()
     };
     L_node * flower_2 = new L_node{
         Flower_Component::FLOWER,
         f_step * rotate_about(glm::vec4(1, 0, 0, 0),  -angle/2),
+        this->flower_mat,
         std::vector<L_node *>{},
         flower_mesh->getSize()
     };
@@ -34,6 +36,7 @@ L_node * Lily::rule1(int number){
         L_node * branch = new L_node{
             Flower_Component::STEM,
             f_step * rotate_about(glm::vec4(1, 0, 0, 0),  angle - 2 * i * angle + M_PI) * glm::mat4(glm::mat3(0.6)),
+            this->stem_mat,
             std::vector<L_node *>{i%2 == 0? flower_2 : flower},
             lily_stem->getSize()
         };
@@ -42,10 +45,10 @@ L_node * Lily::rule1(int number){
     if(number > 0){
         branches.push_back(rule1(number - 1));
     }
-    std::cout<<number<<std::endl;
     L_node * stem = new L_node{
         Flower_Component::STEM,
         f_step * rotate_about(glm::vec4(0, 1, 0, 0), angle),
+        this->stem_mat,
         branches,
         lily_stem->getSize()
     };
@@ -59,6 +62,7 @@ L_node * Lily::rule2(int number, L_node * next){
         L_node * branch = new L_node{
             Flower_Component::LEAF,
             f_step * rotate_about(glm::vec4(0, 1, 0, 0),  M_PI * i) * glm::mat4(glm::mat3(0.6)),
+            this->leaf_mat,
             std::vector<L_node *>{},
             leaf_mesh->getSize()
         };
@@ -73,6 +77,7 @@ L_node * Lily::rule2(int number, L_node * next){
     L_node * stem = new L_node{
         Flower_Component::STEM,
         f_step * rotate_about(glm::vec4(0, 1, 0, 0), angle),
+        this->stem_mat,
         branches,
         lily_stem->getSize()
     };
