@@ -18,12 +18,12 @@ public:
 
 private:
     //flower
-    Mesh* flower_mesh = new Mesh("resources/assets/tulip.obj");
+    Mesh* flower_mesh = new Mesh("resources/assets/lily.obj");
     GLuint m_flower = flower_mesh->getVAO();
     SceneMaterial flower_mat {SceneColor(0.98, 0.98, 0.8, 0), SceneColor(0.98, 0.98, 0.8, 0), SceneColor(0.2, 0.2,0.2, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     //leaf
-    Mesh* leaf_mesh = new Mesh("resources/assets/t_leaf.obj");
+    Mesh* leaf_mesh = new Mesh("resources/assets/l_leaf.obj");
     GLuint m_leaf = leaf_mesh->getVAO();
     SceneMaterial leaf_mat {SceneColor(0, 0.8, 0, 0), SceneColor(0, 0.8, 0, 0), SceneColor(0.7, 0.7, 0.7, 1), 0.25, SceneColor(0, 0, 0, 0)};
 

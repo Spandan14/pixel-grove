@@ -22,20 +22,21 @@ L_node * Rose::premise(){
 
     };
 
-    std::vector<L_node *> next{        new L_node{
-            Flower_Component::STEM,
-                f_step,
-                this->stem_mat,
-                std::vector<L_node *>{rule1(1, final_flower)},
-                rose_stem->getSize()
-                               },
-                               new L_node{
-                                          Flower_Component::LEAF,
-                                   f_step * rotate_about(glm::vec4(1, 0, 0, 0), -angle/2) * rotate_about(glm::vec4(0, 1, 0, 0), M_PI),
-                                   this->leaf_mat,
-                                   std::vector<L_node *>{},
-                                   leaf_mesh->getSize()
-                               }
+    std::vector<L_node *> next{
+        new L_node{
+        Flower_Component::STEM,
+            f_step,
+            this->stem_mat,
+            std::vector<L_node *>{rule1(1, final_flower)},
+            rose_stem->getSize()
+                           },
+                           new L_node{
+                                      Flower_Component::LEAF,
+                               f_step * rotate_about(glm::vec4(1, 0, 0, 0), -angle/2) * rotate_about(glm::vec4(0, 1, 0, 0), M_PI),
+                               this->leaf_mat,
+                               std::vector<L_node *>{},
+                               leaf_mesh->getSize()
+                           }
 
 
     };

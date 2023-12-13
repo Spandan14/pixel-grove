@@ -235,7 +235,7 @@ void Realtime::paintGL() {
     GLint lightType_Location = glGetUniformLocation(m_shader, "lightType[0]");
     glUniform1i(lightType_Location, lightTypeToNum(light.type));
     glm::vec3 origin(0, 0, 0);
-    rose->drawRoses(m_shader, 0, origin);
+    lily->drawLilies(m_shader, 0, origin);
 
 
 

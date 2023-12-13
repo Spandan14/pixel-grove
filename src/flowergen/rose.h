@@ -34,7 +34,8 @@ private:
     float decay = 0.7;
     Stem* rose_stem = new Stem(height, radius);
     GLuint m_stem = rose_stem->getVAO();
-    SceneMaterial stem_mat {SceneColor(0, 0.6, 0.2, 0), SceneColor(0, 0.6, 0.2, 0), SceneColor(0.5, 0.5, 0.5, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    SceneMaterial stem_mat {SceneColor(0, 0.6, 0.2, 0), SceneColor(0, 0.6, 0.2, 0),
+                           SceneColor(0.5, 0.5, 0.5, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     glm::mat4 f_step =   glm::mat4(1.0, 0.0, 0.0, 0.0,
                                  0.0, 1.0, 0.0, 0.0,
