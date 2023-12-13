@@ -43,7 +43,17 @@ void main() {
 
             vec3 R = reflect(-L, normalize(worldNormal));
             fragColor += clamp((k_s * specularColor) * clamp(pow(dot(R, E), shininess), 0.f, 1.f) * worldLightCol[i], 0.f, 1.f);
-        }
+        } else if (lightType[i] == 1){
+           vec3 L = vec3(normalize(worldLightPos[i] - vec4(worldPosition, 1.f)));
+           vec4 diffuse = (k_d * diffuseColor) * clamp(dot(L, normalize(worldNormal)), 0.0, 1.f) * worldLightCol[i];
+
+           vec3 R = -reflect(L, normalize(worldNormal));
+           vec4 specular = clamp((k_s * specularColor) * pow(clamp(dot(R, E), 0.f, 1.f), shininess) * worldLightCol[i], 0.f, 1.f);
+
+           float distance = distance(worldLightPos[i], vec4(worldPosition, 1.f));
+           float attenuation = 1.f / (lightFunction[i][0] + (distance * lightFunction[i][1]) + (lightFunction[i][2] * pow(distance, 2)));
+           fragColor += attenuation * (diffuse + specular);
+      }
    }
     fragColor = vec4(clamp(0.f, 1.f, fragColor[0] - (timeofday * 0.02)),
                     clamp(0.f, 1.f, fragColor[1] - (timeofday * 0.02)),
