@@ -33,10 +33,13 @@ struct FlowerData {
 struct FlowerCTMCollection {
     std::vector<glm::mat4> leafCTMs;
     std::vector<glm::mat3> leafInverseCTMS;
+    std::vector<SceneMaterial> leafMats;
     std::vector<glm::mat4> flowerCTMs;
     std::vector<glm::mat3> flowerInverseCTMS;
+    std::vector<SceneMaterial> flowerMats;
     std::vector<glm::mat4> stemCTMs;
     std::vector<glm::mat3> stemInverseCTMS;
+    std::vector<SceneMaterial> stemMats;
 };
 
 class Flower {

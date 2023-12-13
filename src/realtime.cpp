@@ -277,12 +277,13 @@ void Realtime::setupFlowers() {
     glGenBuffers(1, &m_flower_data_vbo);
     glGenBuffers(1, &m_flower_ctms_vbo);
     glGenBuffers(1, &m_flower_i_ctms_vbo);
+    glGenBuffers(1, &m_flower_lighting_vbo);
 
     glUseProgram(0);
 }
 
 void Realtime::drawFlowerComponent(std::vector<float> component_tris, std::vector<glm::mat4> ctms,
-                                   std::vector<glm::mat3> i_ctms) {
+                                   std::vector<glm::mat3> i_ctms, std::vector<SceneMaterial> mats) {
     glBindVertexArray(m_flower_vao);
 
     if (ctms.size() != i_ctms.size()) {
@@ -324,6 +325,55 @@ void Realtime::drawFlowerComponent(std::vector<float> component_tris, std::vecto
         glVertexAttribDivisor(i_ctms_loc + i, 1); // instanced vertex attribute
     }
 
+    glBindBuffer(GL_ARRAY_BUFFER, m_flower_lighting_vbo);
+    std::vector<float> lightingData;
+    for (const SceneMaterial& material : mats) {
+        lightingData.push_back(material.cAmbient[0]);
+        lightingData.push_back(material.cAmbient[1]);
+        lightingData.push_back(material.cAmbient[2]);
+        lightingData.push_back(material.cAmbient[3]);
+
+        lightingData.push_back(material.cDiffuse[0]);
+        lightingData.push_back(material.cDiffuse[1]);
+        lightingData.push_back(material.cDiffuse[2]);
+        lightingData.push_back(material.cDiffuse[3]);
+
+        lightingData.push_back(material.cSpecular[0]);
+        lightingData.push_back(material.cSpecular[1]);
+        lightingData.push_back(material.cSpecular[2]);
+        lightingData.push_back(material.cSpecular[3]);
+
+        lightingData.push_back(material.cEmissive[0]);
+        lightingData.push_back(material.cEmissive[1]);
+        lightingData.push_back(material.cEmissive[2]);
+        lightingData.push_back(material.cEmissive[3]);
+
+        lightingData.push_back(material.shininess);
+    }
+
+    glBufferData(GL_ARRAY_BUFFER, lightingData.size() * sizeof(float), lightingData.data(), GL_DYNAMIC_DRAW);
+
+    // ambient
+    glEnableVertexAttribArray(10);
+    glVertexAttribPointer(10, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), reinterpret_cast<void *>(0));
+    glVertexAttribDivisor(10, 1);
+    // diffuse
+    glEnableVertexAttribArray(11);
+    glVertexAttribPointer(11, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), reinterpret_cast<void *>(4 * sizeof(float)));
+    glVertexAttribDivisor(11, 1);
+    // specular
+    glEnableVertexAttribArray(12);
+    glVertexAttribPointer(12, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), reinterpret_cast<void *>(8 * sizeof(float)));
+    glVertexAttribDivisor(12, 1);
+    // emissive
+    glEnableVertexAttribArray(13);
+    glVertexAttribPointer(13, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), reinterpret_cast<void *>(12 * sizeof(float)));
+    glVertexAttribDivisor(13, 1);
+    // shininess
+    glEnableVertexAttribArray(14);
+    glVertexAttribPointer(14, 1, GL_FLOAT, GL_FALSE, 17 * sizeof(float), reinterpret_cast<void *>(16 * sizeof(float)));
+    glVertexAttribDivisor(14, 1);
+
     glDrawArraysInstanced(GL_TRIANGLES, 0, component_tris.size() / 6, (GLsizei) ctms.size());
 
     glBindVertexArray(0);
@@ -345,9 +395,12 @@ void Realtime::paintFlowers() {
     Lily *lily = new Lily();
     FlowerCTMCollection lily_ctms = Flower::collectCTMs(lily->flowerData);
 
-    drawFlowerComponent(Lily::LILY_FLOWER_MESH->getTriangles(), lily_ctms.flowerCTMs, lily_ctms.flowerInverseCTMS);
-    drawFlowerComponent(Lily::LILY_STEM_MESH->getTriangles(), lily_ctms.stemCTMs, lily_ctms.stemInverseCTMS);
-    drawFlowerComponent(Lily::LILY_LEAF_MESH->getTriangles(), lily_ctms.leafCTMs, lily_ctms.leafInverseCTMS);
+    drawFlowerComponent(Lily::LILY_FLOWER_MESH->getTriangles(), lily_ctms.flowerCTMs,
+                        lily_ctms.flowerInverseCTMS, lily_ctms.flowerMats);
+    drawFlowerComponent(Lily::LILY_STEM_MESH->getTriangles(), lily_ctms.stemCTMs,
+                        lily_ctms.stemInverseCTMS, lily_ctms.stemMats);
+    drawFlowerComponent(Lily::LILY_LEAF_MESH->getTriangles(), lily_ctms.leafCTMs,
+                        lily_ctms.leafInverseCTMS, lily_ctms.leafMats);
 
     glUseProgram(0);
 }

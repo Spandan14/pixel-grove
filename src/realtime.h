@@ -93,7 +93,8 @@ private:
 
     // Flower variables
     void setupFlowers();
-    void drawFlowerComponent(std::vector<float> component_tris, std::vector<glm::mat4> ctms, std::vector<glm::mat3> i_ctms);
+    void drawFlowerComponent(std::vector<float> component_tris, std::vector<glm::mat4> ctms,
+                             std::vector<glm::mat3> i_ctms, std::vector<SceneMaterial> mats);
     void paintFlowers();
 
     GLuint m_flower_shader;
@@ -102,6 +103,7 @@ private:
     GLuint m_flower_data_vbo;
     GLuint m_flower_ctms_vbo;
     GLuint m_flower_i_ctms_vbo;
+    GLuint m_flower_lighting_vbo;
 
 
 
