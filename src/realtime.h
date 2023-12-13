@@ -55,6 +55,7 @@ private:
     // initialization
     bool initialized = false;
 
+
     // Terrain variables
     void setupTerrain();
     void setupTerrainTextures();
@@ -66,7 +67,34 @@ private:
     TerrainGenerator m_terrain;
 
     GLuint m_terrain_rocks_texture;
+    GLenum m_terrain_rocks_texture_slot = GL_TEXTURE0;
+    int m_terrain_rocks_texture_slot_number = 0;
     GLuint m_terrain_sandgrass_texture;
+    GLenum m_terrain_sandgrass_texture_slot = GL_TEXTURE1;
+    int m_terrain_sandgrass_texture_slot_number = 1;
+
+
+    // Skybox variables
+    void setupSkybox();
+    void setupSkyboxTextures();
+    void paintSkybox();
+
+    GLuint m_skybox_shader;
+    GLuint m_skybox_vao;
+    GLuint m_skybox_vbo;
+    GLuint m_skybox_ebo;
+
+    GLuint m_skybox_cube_map_texture;
+    GLenum m_skybox_cube_map_texture_slot = GL_TEXTURE2;
+    int m_skybox_cube_map_texture_slot_number = 2;
+
+
+    // Flower variables
+    void setupFlowers();
+    void paintFlowers();
+
+    GLuint m_flower_shader;
+
 
     // Camera
     Camera m_camera = Camera(0, 0, SceneCameraData());

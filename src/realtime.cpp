@@ -5,9 +5,13 @@
 #include <QKeyEvent>
 #include <iostream>
 #include "settings.h"
+#include "skybox/skybox_utils.h"
 #include "src/utils/shaderloader.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
+
+#include "src/flowergen/tulip.h"
+
 
 // ================== Project 5: Lights, Camera
 
@@ -64,6 +68,8 @@ void Realtime::initializeGL() {
     // Students: anything requiring OpenGL calls when the program starts should be done here
     setupCamera();
     setupTerrain();
+    setupSkybox();
+    // setupFlowers();
 }
 
 void Realtime::setupCamera() {
@@ -77,8 +83,6 @@ void Realtime::setupCamera() {
 }
 
 void Realtime::setupTerrain() {
-    glClearColor(0, 0, 0, 1);
-
     m_terrain_shader = ShaderLoader::createShaderProgram(":/resources/shaders/terrain.vert",
                                                         ":/resources/shaders/terrain.frag");
 
@@ -138,7 +142,7 @@ void Realtime::setupTerrainTextures() {
     glGenTextures(1, &m_terrain_rocks_texture);
     glGenTextures(1, &m_terrain_sandgrass_texture);
 
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(m_terrain_rocks_texture_slot);
     glBindTexture(GL_TEXTURE_2D, m_terrain_rocks_texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rocks_texture.width(), rocks_texture.height(), 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, rocks_texture.bits());
@@ -148,7 +152,7 @@ void Realtime::setupTerrainTextures() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(m_terrain_sandgrass_texture_slot);
     glBindTexture(GL_TEXTURE_2D, m_terrain_sandgrass_texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sandgrass_texture.width(), sandgrass_texture.height(), 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, sandgrass_texture.bits());
@@ -160,9 +164,131 @@ void Realtime::setupTerrainTextures() {
 
     GLint rocks_texture_location = glGetUniformLocation(m_terrain_shader, "rocks_texture");
     GLint sandgrass_texture_location = glGetUniformLocation(m_terrain_shader, "sandgrass_texture");
-    glUniform1i(rocks_texture_location, 0);
-    glUniform1i(sandgrass_texture_location, 1);
+    glUniform1i(rocks_texture_location, m_terrain_rocks_texture_slot_number);
+    glUniform1i(sandgrass_texture_location, m_terrain_sandgrass_texture_slot_number);
     glUseProgram(0);
+}
+
+void Realtime::setupSkybox() {
+    m_skybox_shader = ShaderLoader::createShaderProgram(":/resources/shaders/skybox.vert",
+                                                        ":/resources/shaders/skybox.frag");
+
+    glUseProgram(m_skybox_shader);
+    GLint skyboxLocation = glGetUniformLocation(m_skybox_shader, "skybox");
+    glUniform1i(skyboxLocation, m_skybox_cube_map_texture_slot_number);
+    glUseProgram(0);
+
+    glGenVertexArrays(1, &m_skybox_vao);
+    glGenBuffers(1, &m_skybox_vbo);
+    glGenBuffers(1, &m_skybox_ebo);
+
+    glBindVertexArray(m_skybox_vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_skybox_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_skybox_ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(skyboxIndices), &skyboxIndices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    setupSkyboxTextures();
+}
+
+void Realtime::setupSkyboxTextures() {
+    std::string facesCubemap[6] = {
+        ":/resources/images/right.jpg",
+        ":/resources/images/left.jpg",
+        ":/resources/images/top.jpg",
+        ":/resources/images/bottom.jpg",
+        ":/resources/images/front.jpg",
+        ":/resources/images/back.jpg"
+    };
+
+    glGenTextures(1, &m_skybox_cube_map_texture);
+    glActiveTexture(m_skybox_cube_map_texture_slot);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_skybox_cube_map_texture);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); // optional
+
+    for (unsigned int i = 0; i < 6; i++) {
+        QImage face_texture = QImage(facesCubemap[i].c_str());
+        if (face_texture.isNull()) {
+            std::cerr << "Failed to load texture" << std::endl;
+        }
+
+        // do not mirror face texture, don't fucking ask me why this works
+        face_texture = face_texture.convertToFormat(QImage::Format_RGBA8888);
+
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, face_texture.width(), face_texture.height(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, face_texture.bits());
+    }
+    initialized = true;
+}
+
+void Realtime::setupFlowers() {
+    m_flower_shader = ShaderLoader::createShaderProgram(":/resources/shaders/phong.vert",
+                                                        ":/resources/shaders/phong.frag");
+
+    glUseProgram(m_flower_shader);
+
+    GLint ka_Location = glGetUniformLocation(m_flower_shader, "k_a");
+    glUniform1f(ka_Location, 0.5);
+
+    GLint kd_Location = glGetUniformLocation(m_flower_shader, "k_d");
+    glUniform1f(kd_Location, 0.7);
+
+    GLint ks_Location = glGetUniformLocation(m_flower_shader, "k_s");
+    glUniform1f(ks_Location, 0.54);
+
+    GLint timeofdayObj = glGetUniformLocation(m_flower_shader, "timeofday");
+    glUniform1f(timeofdayObj, (float) settings.timeOfDay);
+
+    GLint camPosLocation = glGetUniformLocation(m_flower_shader, "worldCameraPos");
+    glm::vec4 camPos = m_camera.getCameraPos();
+    glUniform4f(camPosLocation, camPos[0], camPos[1], camPos[2], camPos[3]);
+
+    GLint viewLocation = glGetUniformLocation(m_flower_shader, "viewMatrix");
+    glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &m_camera.getViewMatrix()[0][0]);
+
+    GLint projectionLocation = glGetUniformLocation(m_flower_shader, "projectionMatrix");
+    glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
+
+    SceneLightData light{};
+    // TODO REPLACE WITH DIRECTIONAL LIGHT FROM TIMEOFDAY
+    light.type = LightType::LIGHT_DIRECTIONAL;
+    light.pos = glm::vec4(1.f, 1.f, 1.f, 1.f);
+    light.dir = glm::vec4(0.25, -1, -1, 0.f);
+    light.color = glm::vec4(0.5f, 0.5f, 0.5f, 1);
+    GLint lightsNum_Location = glGetUniformLocation(m_flower_shader, "lightsNum");
+    glUniform1i(lightsNum_Location, 1);
+
+    GLint lightPos_Location = glGetUniformLocation(m_flower_shader, "worldLightPos[0]");
+    glUniform4f(lightPos_Location, light.pos[0], light.pos[1], light.pos[2], light.pos[3]);
+
+    GLint lightDir_Location = glGetUniformLocation(m_flower_shader, "worldLightDir[0]");
+    glUniform4f(lightDir_Location, light.dir[0], light.dir[1], light.dir[2], light.dir[3]);
+
+    GLint lightColor_Location = glGetUniformLocation(m_flower_shader, "worldLightCol[0]");
+    glUniform4f(lightColor_Location, light.color[0], light.color[1], light.color[2], light.color[3]);
+
+    GLint lightType_Location = glGetUniformLocation(m_flower_shader, "lightType[0]");
+    glUniform1i(lightType_Location, lightTypeToNum(light.type));
+
+    glUseProgram(0);
+}
+
+void Realtime::paintFlowers() {
+    // this->tulip->drawLilies(m_shader);
 }
 
 void Realtime::paintTerrain() {
@@ -186,17 +312,17 @@ void Realtime::paintTerrain() {
 
     glBindVertexArray(m_terrain_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_terrain_vbo);
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(m_terrain_rocks_texture_slot);
     glBindTexture(GL_TEXTURE_2D, m_terrain_rocks_texture);
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(m_terrain_sandgrass_texture_slot);
     glBindTexture(GL_TEXTURE_2D, m_terrain_sandgrass_texture);
 
     glPolygonMode(GL_FRONT_AND_BACK, settings.terrainWireframe ? GL_LINE : GL_FILL);
     glDrawArrays(GL_TRIANGLES, 0, res * res * 6);
 
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(m_terrain_rocks_texture_slot);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(m_terrain_sandgrass_texture_slot);
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -204,9 +330,33 @@ void Realtime::paintTerrain() {
     glUseProgram(0);
 }
 
+void Realtime::paintSkybox() {
+    glDepthFunc(GL_LEQUAL);
+
+    glUseProgram(m_skybox_shader);
+    glm::mat4 view = glm::mat4(glm::mat3(m_camera.getViewMatrix()));
+    glm::mat4 projection = m_camera.getProjectionMatrix();
+    glUniformMatrix4fv(glGetUniformLocation(m_skybox_shader, "view"), 1, GL_FALSE, &view[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(m_skybox_shader, "projection"), 1, GL_FALSE, &projection[0][0]);
+
+    GLint timeofdayLocation = glGetUniformLocation(m_skybox_shader, "timeofday");
+    glUniform1f(timeofdayLocation, (float) settings.timeOfDay);
+
+    glBindVertexArray(m_skybox_vao);
+    glActiveTexture(m_skybox_cube_map_texture_slot);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_skybox_cube_map_texture);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
+    glDepthFunc(GL_LESS);
+    glUseProgram(0);
+}
+
 void Realtime::paintGL() {
     // Students: anything requiring OpenGL calls every frame should be done here
     paintTerrain();
+    paintSkybox();
+    // paintFlowers();
 }
 
 void Realtime::resizeGL(int w, int h) {

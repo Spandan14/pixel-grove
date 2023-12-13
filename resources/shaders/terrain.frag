@@ -21,7 +21,7 @@ float k_s = 0.3;
 vec4 c_specular = vec4(1.0, 1.0, 1.0, 1.0);
 float shininess = 0.0;
 
-float blend = 0.5;
+float blend = 0.85;
 
 out vec4 fragColor;
 

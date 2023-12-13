@@ -111,17 +111,7 @@ struct SceneMaterial {
     SceneColor cSpecular; // Specular term
     float shininess;      // Specular exponent
 
-    SceneColor cReflective; // Used to weight contribution of reflected ray lighting (via multiplication)
-
-    SceneColor cTransparent; // Transparency;        used for extra credit (refraction)
-    float ior;               // Index of refraction; used for extra credit (refraction)
-
-    SceneFileMap textureMap; // Used for texture mapping
-    float blend;             // Used for texture mapping
-
-    SceneColor cEmissive; // Not used
-    SceneFileMap bumpMap; // Not used
-
+    SceneColor cEmissive;
     void clear()
     {
         cAmbient = glm::vec4(0);
@@ -129,16 +119,7 @@ struct SceneMaterial {
         cSpecular = glm::vec4(0);
         shininess = 0;
 
-        cReflective = glm::vec4(0);
-
-        cTransparent = glm::vec4(0);
-        ior = 0;
-
-        textureMap.clear();
-        blend = 0;
-
         cEmissive = glm::vec4(0);
-        bumpMap.clear();
     }
 };
 
