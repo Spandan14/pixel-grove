@@ -2,21 +2,23 @@
 #define MESH_H
 
 
+#include "src/utils/drawables.h"
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
 
 
-class Mesh
+class Mesh : public Drawables
 {
 public:
     Mesh(const char* filepath);
 
     GLuint getVAO();
 
-    void freeMesh();
-    void drawMesh();
+    void freeMesh() override;
+    void drawMesh() override;
+    int getSize() override {return m_mesh.size()/8;}
 
 
 private:

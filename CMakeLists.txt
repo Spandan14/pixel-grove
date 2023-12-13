@@ -46,6 +46,10 @@ add_executable(${PROJECT_NAME}
         src/camera/camera.cpp
         src/flowergen/lily.cpp
         src/skybox/skybox_utils.h
+        src/flowergen/stem.cpp
+        src/utils/mesh.cpp
+        src/flowergen/rose.cpp
+        src/flowergen/tulip.cpp
 
 )
 
@@ -68,6 +72,8 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   resources/shaders/skybox.vert
   resources/shaders/phong.frag
   resources/shaders/phong.vert
+  resources/assets/tulip.obj
+  resources/assets/t_leaf.obj
 )
 
 # GLEW: this creates its library and allows you to `#include "GL/glew.h"`

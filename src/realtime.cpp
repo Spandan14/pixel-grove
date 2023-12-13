@@ -69,7 +69,7 @@ void Realtime::initializeGL() {
     setupCamera();
     setupTerrain();
     setupSkybox();
-    // setupFlowers();
+    setupFlowers();
 }
 
 void Realtime::setupCamera() {
@@ -241,6 +241,10 @@ void Realtime::setupFlowers() {
 
     glUseProgram(m_flower_shader);
 
+    this->tulip = new Tulip();
+    this->lily = new Lily();
+    this->rose = new Rose();
+
     GLint ka_Location = glGetUniformLocation(m_flower_shader, "k_a");
     glUniform1f(ka_Location, 0.5);
 
@@ -251,17 +255,7 @@ void Realtime::setupFlowers() {
     glUniform1f(ks_Location, 0.54);
 
     GLint timeofdayObj = glGetUniformLocation(m_flower_shader, "timeofday");
-    glUniform1f(timeofdayObj, (float) settings.timeOfDay);
-
-    GLint camPosLocation = glGetUniformLocation(m_flower_shader, "worldCameraPos");
-    glm::vec4 camPos = m_camera.getCameraPos();
-    glUniform4f(camPosLocation, camPos[0], camPos[1], camPos[2], camPos[3]);
-
-    GLint viewLocation = glGetUniformLocation(m_flower_shader, "viewMatrix");
-    glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &m_camera.getViewMatrix()[0][0]);
-
-    GLint projectionLocation = glGetUniformLocation(m_flower_shader, "projectionMatrix");
-    glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
+    glUniform1f(timeofdayObj, (float) settings.timeOfDay);;
 
     SceneLightData light{};
     // TODO REPLACE WITH DIRECTIONAL LIGHT FROM TIMEOFDAY
@@ -288,7 +282,32 @@ void Realtime::setupFlowers() {
 }
 
 void Realtime::paintFlowers() {
-    // this->tulip->drawLilies(m_shader);
+    glUseProgram(m_flower_shader);
+
+    GLint camPosLocation = glGetUniformLocation(m_flower_shader, "worldCameraPos");
+    glm::vec4 camPos = m_camera.getCameraPos();
+    glUniform4f(camPosLocation, camPos[0], camPos[1], camPos[2], camPos[3]);
+
+    GLint viewLocation = glGetUniformLocation(m_flower_shader, "viewMatrix");
+    glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &m_camera.getViewMatrix()[0][0]);
+
+    GLint projectionLocation = glGetUniformLocation(m_flower_shader, "projectionMatrix");
+    glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &m_camera.getProjectionMatrix()[0][0]);
+
+    for (int i = 0; i < 25; ++i) {
+        for (int j = 0; j<25; ++j) {
+            glm::vec3 newloc = glm::vec3(i * 0.4, 0, j * 0.4);
+            if ((i * 2) % 3 == 0) {
+                this->lily->drawLilies(m_flower_shader, 0, newloc);
+            } else if ((i * 2) % 3 == 1) {
+                this->rose->drawRoses(m_flower_shader, 0, newloc);
+            } else {
+                this->tulip->drawTulips(m_flower_shader, j % 2, newloc);
+            }
+        }
+    }
+
+    glUseProgram(0);
 }
 
 void Realtime::paintTerrain() {
@@ -356,7 +375,7 @@ void Realtime::paintGL() {
     // Students: anything requiring OpenGL calls every frame should be done here
     paintTerrain();
     paintSkybox();
-    // paintFlowers();
+    paintFlowers();
 }
 
 void Realtime::resizeGL(int w, int h) {

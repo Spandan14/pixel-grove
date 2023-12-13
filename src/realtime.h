@@ -14,6 +14,10 @@
 #include <QTimer>
 #include "src/terrain/terrain.h"
 #include "src/camera/camera.h"
+#include "src/flowergen/tulip.h"
+#include "src/flowergen/lily.h"
+#include "src/flowergen/rose.h"
+#include "src/flowergen/stem.h"
 
 class Realtime : public QOpenGLWidget
 {
@@ -95,6 +99,9 @@ private:
 
     GLuint m_flower_shader;
 
+    Lily *lily;
+    Tulip *tulip;
+    Rose *rose;
 
     // Camera
     Camera m_camera = Camera(0, 0, SceneCameraData());

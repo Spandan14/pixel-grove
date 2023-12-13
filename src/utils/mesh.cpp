@@ -47,7 +47,7 @@ bool Mesh::loadMesh(){
     std::vector<glm::vec3> t_normals;
     std::vector<glm::vec2> t_uv;
     FILE * file = fopen(this->filepath, "r");
-    if( file == NULL ){
+    if ( file == NULL ) {
         printf("File open error\n");
         return false;
     }
