@@ -12,6 +12,7 @@
     <file alias="resources/shaders/phong.frag">C:/Users/maxgu/CS1230/pixel-grove/resources/shaders/phong.frag</file>
     <file alias="resources/shaders/phong.vert">C:/Users/maxgu/CS1230/pixel-grove/resources/shaders/phong.vert</file>
     <file alias="resources/assets/tulip.obj">C:/Users/maxgu/CS1230/pixel-grove/resources/assets/tulip.obj</file>
+    <file alias="resources/assets/t_leaf.obj">C:/Users/maxgu/CS1230/pixel-grove/resources/assets/t_leaf.obj</file>
   </qresource>
 </RCC>
 

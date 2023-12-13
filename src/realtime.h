@@ -1,6 +1,8 @@
 #pragma once
 
 // Defined before including GLEW to suppress deprecation messages on macOS
+#include "src/flowergen/lily.h"
+#include "src/flowergen/rose.h"
 #include "src/utils/stem.h"
 #include "src/flowergen/tulip.h"
 #include "src/utils/scenedata.h"
@@ -78,7 +80,7 @@ private:
     GLuint skyboxVBO;
     GLuint cubemapTexture;
     unsigned int loadCubemap(std::vector<std::string> faces);
-    Tulip *tulip;
+    Lily *tulip;
     Stem * stem;
 
 

@@ -78,6 +78,7 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   resources/shaders/phong.frag
   resources/shaders/phong.vert
   resources/assets/tulip.obj
+  resources/assets/t_leaf.obj
 
 )
 

@@ -30,7 +30,7 @@ struct flowerData{
 class Flower{
     public:
     virtual void freeMeshes() = 0;
-        virtual void genFlowers() = 0;
+
         virtual void flattenLSystem(std::vector<L_node *>& original, std::vector<std::vector<flowerData>> & flattened){
             for(int i = 0; i < original.size(); ++i){
                 std::vector<flowerData> flattened_flower;

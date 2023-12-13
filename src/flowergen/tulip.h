@@ -10,9 +10,6 @@ class Tulip : public Flower
 {
 public:
     Tulip();
-    void genFlowers() override;
-    void drawTulip(GLuint m_shader);
-
     void freeMeshes() override;
     GLuint getFlowerVAO() override {return this->m_flower;}
     SceneMaterial getFlowerMat() override {return this->flower_mat;}
@@ -27,19 +24,19 @@ private:
     //flower
     Mesh* flower_mesh = new Mesh("resources/assets/tulip.obj");
     GLuint m_flower = flower_mesh->getVAO();
-    SceneMaterial flower_mat {SceneColor(1, 0, 0, 0), SceneColor(1, 0, 0, 0), SceneColor(1, 1, 1, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    SceneMaterial flower_mat {SceneColor(0.98, 0.59, 0.39, 0), SceneColor(0.98, 0.59, 0.39, 0), SceneColor(0, 0,0, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     //leaf
-    GLuint m_leaf;
-    SceneMaterial leaf_mat {SceneColor(0, 1, 0, 0), SceneColor(0, 1, 0, 0), SceneColor(1, 1, 1, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    Mesh* leaf_mesh = new Mesh("resources/assets/t_leaf.obj");
+    GLuint m_leaf = leaf_mesh->getVAO();
+    SceneMaterial leaf_mat {SceneColor(0, 0.8, 0, 0), SceneColor(0, 0.8, 0, 0), SceneColor(0.7, 0.7, 0.7, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     //stem
     float radius = 0.01;
     float height = 0.1;
-    float decay = 1;
     Stem* tulip_stem = new Stem(height, radius);
     GLuint m_stem = tulip_stem->getVAO();
-    SceneMaterial stem_mat {SceneColor(0, 0.8, 0, 0), SceneColor(0, 0.8, 0, 0), SceneColor(0.5, 0.5, 0.5, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    SceneMaterial stem_mat {SceneColor(0.45, 0.84, 0.45, 0), SceneColor(0.45, 0.84, 0.45, 0), SceneColor(0.5, 0.5, 0.5, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     glm::mat4 f_step =   glm::mat4(1.0, 0.0, 0.0, 0.0,
                                  0.0, 1.0, 0.0, 0.0,
@@ -52,7 +49,7 @@ private:
     L_node * rule1(int number = 1, L_node * next = nullptr);
 
     //turning angles
-    float angle = M_PI/6;
+    float angle = 5 * M_PI/6;
 
     //rendering
     std::vector<std::vector<flowerData>> tulips_render;

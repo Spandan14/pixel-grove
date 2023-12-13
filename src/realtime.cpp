@@ -102,7 +102,7 @@ void Realtime::initializeGL() {
     // Tells OpenGL how big the screen is
     glViewport(0, 0, size().width() * m_devicePixelRatio, size().height() * m_devicePixelRatio);
 
-    this->tulip = new Tulip();
+    this->tulip = new Lily();
 
     SceneCameraData cameraData;
     cameraData.look = glm::vec4(0.f, 0.f, -1.f, 0.f);
@@ -227,7 +227,7 @@ void Realtime::paintGL() {
     GLint lightType_Location = glGetUniformLocation(m_shader, "lightType[0]");
     glUniform1i(lightType_Location, lightTypeToNum(light.type));
 
-    this->tulip->drawTulips(m_shader);
+    this->tulip->drawLilies(m_shader);
 
     glUseProgram(0);
 

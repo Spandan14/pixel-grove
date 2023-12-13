@@ -278,7 +278,7 @@ build StaticGLEW_autogen: phony CMakeFiles/StaticGLEW_autogen StaticGLEW_autogen
 #############################################
 # Custom command for .rcc\qrc_Resources.cpp
 
-build .rcc/qrc_Resources.cpp | ${cmake_ninja_workdir}.rcc/qrc_Resources.cpp: CUSTOM_COMMAND resources/images/back.jpg resources/images/front.jpg resources/images/left.jpg resources/images/right.jpg resources/images/top.jpg resources/images/bottom.jpg resources/images/kitten.png resources/shaders/skyblock.frag resources/shaders/skyblock.vert resources/shaders/phong.frag resources/shaders/phong.vert resources/assets/tulip.obj .rcc/Resources.qrc C$:/Qt/6.5.2/mingw_64/./bin/rcc.exe || StaticGLEW_autogen StaticGLEW_autogen_timestamp_deps libStaticGLEW.a pixel-grove_autogen pixel-grove_autogen_timestamp_deps
+build .rcc/qrc_Resources.cpp | ${cmake_ninja_workdir}.rcc/qrc_Resources.cpp: CUSTOM_COMMAND resources/images/back.jpg resources/images/front.jpg resources/images/left.jpg resources/images/right.jpg resources/images/top.jpg resources/images/bottom.jpg resources/images/kitten.png resources/shaders/skyblock.frag resources/shaders/skyblock.vert resources/shaders/phong.frag resources/shaders/phong.vert resources/assets/tulip.obj resources/assets/t_leaf.obj .rcc/Resources.qrc C$:/Qt/6.5.2/mingw_64/./bin/rcc.exe || StaticGLEW_autogen StaticGLEW_autogen_timestamp_deps libStaticGLEW.a pixel-grove_autogen pixel-grove_autogen_timestamp_deps
   COMMAND = cmd.exe /C "cd /D C:\Users\maxgu\CS1230\pixel-grove && C:\Qt\6.5.2\mingw_64\.\bin\rcc.exe --output C:/Users/maxgu/CS1230/pixel-grove/.rcc/qrc_Resources.cpp --name Resources C:/Users/maxgu/CS1230/pixel-grove/.rcc/Resources.qrc --no-zstd"
   DESC = Running rcc for resource Resources
   restat = 1

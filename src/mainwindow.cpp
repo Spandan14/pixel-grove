@@ -297,20 +297,13 @@ void MainWindow::onKernelBasedFilter() {
 }
 
 void MainWindow::onSaveImage() {
-    if (settings.sceneFilePath.empty()) {
-        std::cout << "No scene file loaded." << std::endl;
-        return;
-    }
-    std::string sceneName = settings.sceneFilePath.substr(0, settings.sceneFilePath.find_last_of("."));
+
+    std::string sceneName = "flowerfield";
     sceneName = sceneName.substr(sceneName.find_last_of("/")+1);
     QString filePath = QFileDialog::getSaveFileName(this, tr("Save Image"),
                                                     QDir::currentPath()
                                                         .append(QDir::separator())
-                                                        .append("student_outputs")
-                                                        .append(QDir::separator())
-                                                        .append("lights-camera")
-                                                        .append(QDir::separator())
-                                                        .append("required")
+                                                        .append("outputs")
                                                         .append(QDir::separator())
                                                         .append(sceneName), tr("Image Files (*.png)"));
     std::cout << "Saving image to: \"" << filePath.toStdString() << "\"." << std::endl;
