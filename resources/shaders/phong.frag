@@ -11,6 +11,7 @@ uniform vec4 diffuseColor;
 uniform vec4 specularColor;
 
 uniform float k_d;
+uniform float timeofday;
 
 uniform int lightType[8];
 uniform vec4 worldLightPos[8];
@@ -38,10 +39,13 @@ void main() {
     for (int i = 0; i < lightsNum; i++){
        if (lightType[i] == 0){
             vec3 L = -vec3(normalize(worldLightDir[i]));
-           fragColor += (k_d * diffuseColor) * clamp(dot(L, normalize(worldNormal)), 0.0, 1.f) * worldLightCol[i];
+            fragColor += (k_d * diffuseColor) * clamp(dot(L, normalize(worldNormal)), 0.0, 1.f) * worldLightCol[i];
 
             vec3 R = reflect(-L, normalize(worldNormal));
             fragColor += clamp((k_s * specularColor) * clamp(pow(dot(R, E), shininess), 0.f, 1.f) * worldLightCol[i], 0.f, 1.f);
         }
    }
+    fragColor = vec4(clamp(0.f, 1.f, fragColor[0] - (timeofday * 0.02)),
+                    clamp(0.f, 1.f, fragColor[1] - (timeofday * 0.02)),
+                    clamp(0.f, 1.f, fragColor[2] - (timeofday * 0.02)), fragColor[3]);
 }
