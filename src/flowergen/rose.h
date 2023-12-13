@@ -19,12 +19,12 @@ public:
     void drawRoses(GLuint m_shader, int index, glm::vec3& location) {drawMesh(m_shader, roses_render[index], location);}
 private:
     //flower
-    Mesh* flower_mesh = new Mesh("resources/assets/tulip.obj");
+    Mesh* flower_mesh = new Mesh("resources/assets/rose.obj");
     GLuint m_flower = flower_mesh->getVAO();
     SceneMaterial flower_mat {SceneColor(0.8, 0, 0, 0), SceneColor(0.8, 0, 0, 0), SceneColor(0.2, 0.2,0.2, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     //leaf
-    Mesh* leaf_mesh = new Mesh("resources/assets/t_leaf.obj");
+    Mesh* leaf_mesh = new Mesh("resources/assets/r_leaf.obj");
     GLuint m_leaf = leaf_mesh->getVAO();
     SceneMaterial leaf_mat {SceneColor(0, 0.6, 0.2, 0), SceneColor(0, 0.6, 0.2, 0), SceneColor(0.7, 0.7, 0.7, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
@@ -45,6 +45,7 @@ private:
     std::vector<L_node *> roses;
     L_node * premise();
     L_node * rule1(int number = 1, L_node * next = nullptr);
+    L_node * rule2();
 
     //turning angles
     float angle = 2 * M_PI/3;

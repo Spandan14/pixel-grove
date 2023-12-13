@@ -25,24 +25,24 @@ float skyboxVertices[] =
 
 unsigned int skyboxIndices[] =
     {
-        // Right
-        6, 2, 1,
-        1, 5, 6,
-        // Left
-        7, 4, 0,
-        0, 3, 7,
-        // Top
-        6, 5, 4,
-        4, 7, 6,
-        // Bottom
-        2, 3, 0,
-        0, 1, 2,
-        // Back
-        5, 1, 0,
-        0, 4, 5,
-        // Front
-        6, 7, 3,
-        3, 2, 6
+    // Right
+    6, 2, 1,
+    1, 5, 6,
+    // Left
+    7, 4, 0,
+    0, 3, 7,
+    // Top
+    6, 5, 4,
+    4, 7, 6,
+    // Bottom
+    2, 3, 0,
+    0, 1, 2,
+    // Back
+    5, 1, 0,
+    0, 4, 5,
+    // Front
+    6, 7, 3,
+    3, 2, 6
 };
 
 Realtime::Realtime(QWidget *parent)
@@ -67,6 +67,8 @@ void Realtime::finish() {
     // Students: anything requiring OpenGL calls when the program exits should be done here
     this->tulip->freeMeshes();
     glDeleteProgram(m_shader);
+    this->rose->freeMeshes();
+    this->lily->freeMeshes();
     glDeleteProgram(m_skyblock_shader);
     glUseProgram(0);
     this->doneCurrent();
@@ -87,11 +89,10 @@ void Realtime::initializeGL() {
     }
     std::cout << "Initialized GL: Version " << glewGetString(GLEW_VERSION) << std::endl;
 
-    // Students: anything requiring OpenGL calls when the program starts should be done here
     m_shader = ShaderLoader::createShaderProgram("resources/shaders/phong.vert", "resources/shaders/phong.frag");
     m_skyblock_shader = ShaderLoader::createShaderProgram("resources/shaders/skyblock.vert",
                                                           "resources/shaders/skyblock.frag");
-
+    std::cout<<"shaders loaded"<<std::endl;
     // Allows OpenGL to draw objects appropriately on top of one another
     glEnable(GL_DEPTH_TEST);
     // Tells OpenGL to only draw the front face
@@ -262,6 +263,11 @@ void Realtime::paintGL() {
             }
         }
     }
+    //GLint lightType_Location = glGetUniformLocation(m_shader, "lightType[0]");
+    //glUniform1i(lightType_Location, lightTypeToNum(light.type));
+    glm::vec3 origin(0, 0, 0);
+    rose->drawRoses(m_shader, 0, origin);
+
     glm::mat4 m_sphere_model = glm::mat4(1.f);
     GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
     glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &m_sphere_model[0][0]);
