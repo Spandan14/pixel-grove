@@ -8,6 +8,7 @@
 #include "src/utils/scenedata.h"
 #include "src/utils/sceneparser.h"
 #include "src/camera/camera.h"
+#include "src/utils/emissive_s.h"
 
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
@@ -64,6 +65,7 @@ private:
     GLuint m_texture_shader;
     GLuint m_skyblock_shader;
 
+    std::vector<SceneLightData> lights;
     glm::mat4 m_view;
     glm::mat4 m_proj;
     glm::vec4 m_lightPos;
@@ -86,6 +88,10 @@ private:
     Stem * stem;
     std::vector<Flower *> flowerTypes;
 
+    GLuint m_sphere_vao;
+    GLuint m_sphere_vbo;
+    std::vector<GLfloat> sphereData;
+    Emissive_S * sphere;
 
     int lightTypeToNum(LightType light_type);
 };

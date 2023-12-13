@@ -66,6 +66,7 @@ void Realtime::finish() {
 
     // Students: anything requiring OpenGL calls when the program exits should be done here
     this->tulip->freeMeshes();
+    glDeleteProgram(m_shader);
     glDeleteProgram(m_skyblock_shader);
     glUseProgram(0);
     this->doneCurrent();
@@ -105,8 +106,16 @@ void Realtime::initializeGL() {
     this->tulip = new Tulip();
     this->lily = new Lily();
     this->rose = new Rose();
+    this->sphere = new Emissive_S(glm::vec4(0.2, 0.2, 0.2, 1), lights);
 
     this->flowerTypes = {tulip, lily, rose};
+
+    SceneLightData light;
+    light.type = LightType::LIGHT_DIRECTIONAL;
+    light.pos = glm::vec4(1.f, 1.f, 1.f, 1.f);
+    light.dir = glm::vec4(0.25, -1, -1, 0.f);
+    light.color = glm::vec4(0.5f, 0.5f, 0.5f, 1);
+    lights.push_back(light);
 
     SceneCameraData cameraData;
     cameraData.look = glm::vec4(0.f, 0.f, -1.f, 0.f);
@@ -214,27 +223,33 @@ void Realtime::paintGL() {
     GLint projectionLocation = glGetUniformLocation(m_shader, "projectionMatrix");
     glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
 
-    SceneLightData light;
-    light.type = LightType::LIGHT_DIRECTIONAL;
-    light.pos = glm::vec4(1.f, 1.f, 1.f, 1.f);
-    light.dir = glm::vec4(0.25, -1, -1, 0.f);
-    light.color = glm::vec4(0.5f, 0.5f, 0.5f, 1);
     GLint lightsNum_Location = glGetUniformLocation(m_shader, "lightsNum");
-    glUniform1i(lightsNum_Location, 1);
+    glUniform1i(lightsNum_Location, (int)lights.size());
+    for (int j = 0; j < lights.size(); j++){
+        SceneLightData light = lights[j];
+        GLint lightPos_Location = glGetUniformLocation(m_shader, ("worldLightPos[" + std::to_string(j) + "]").c_str());
+        glUniform4f(lightPos_Location, light.pos[0], light.pos[1], light.pos[2], light.pos[3]);
 
-    GLint lightPos_Location = glGetUniformLocation(m_shader, "worldLightPos[0]");
-    glUniform4f(lightPos_Location, light.pos[0], light.pos[1], light.pos[2], light.pos[3]);
+        GLint lightDir_Location = glGetUniformLocation(m_shader, ("worldLightDir[" + std::to_string(j) + "]").c_str());
+        glUniform4f(lightDir_Location, light.dir[0], light.dir[1], light.dir[2], light.dir[3]);
 
-    GLint lightDir_Location = glGetUniformLocation(m_shader, "worldLightDir[0]");
-    glUniform4f(lightDir_Location, light.dir[0], light.dir[1], light.dir[2], light.dir[3]);
+        GLint lightColor_Location = glGetUniformLocation(m_shader, ("worldLightCol[" + std::to_string(j) + "]").c_str());
+        glUniform4f(lightColor_Location, light.color[0], light.color[1], light.color[2], light.color[3]);
 
-    GLint lightColor_Location = glGetUniformLocation(m_shader, "worldLightCol[0]");
-    glUniform4f(lightColor_Location, light.color[0], light.color[1], light.color[2], light.color[3]);
+        GLint lightType_Location = glGetUniformLocation(m_shader, ("lightType[" + std::to_string(j) + "]").c_str());
+        glUniform1i(lightType_Location, lightTypeToNum(light.type));
 
-    GLint lightType_Location = glGetUniformLocation(m_shader, "lightType[0]");
-    glUniform1i(lightType_Location, lightTypeToNum(light.type));
-    for(int i = 0; i < 25; ++i){
-        for(int j = 0; j<25; ++j){
+        GLint lightFunction_Location = glGetUniformLocation(m_shader, ("lightFunction[" + std::to_string(j) + "]").c_str());
+        glUniform3f(lightFunction_Location, light.function[0], light.function[1], light.function[2]);
+
+        GLint lightAngle_Location = glGetUniformLocation(m_shader, ("lightAngle[" + std::to_string(j) + "]").c_str());
+        glUniform1f(lightAngle_Location, light.angle);
+
+        GLint lightPenumbra_Location = glGetUniformLocation(m_shader, ("lightPenumbra[" + std::to_string(j) + "]").c_str());
+        glUniform1f(lightPenumbra_Location, light.penumbra);
+    }
+    for(int i = 0; i < 10; ++i){
+        for(int j = 0; j<10; ++j){
             glm::vec3 newloc = glm::vec3(i * 0.4, 0, j * 0.4);
             if((i * 2)%3 == 0){
             this->lily->drawLilies(m_shader, 0, newloc);
@@ -247,15 +262,22 @@ void Realtime::paintGL() {
             }
         }
     }
+    glm::mat4 m_sphere_model = glm::mat4(1.f);
+    GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
+    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &m_sphere_model[0][0]);
 
+    glm::mat3 m_sphere_inverseCTM = glm::transpose(glm::inverse(glm::mat3(m_sphere_model)));
+    GLint inverseCTMLocation = glGetUniformLocation(m_shader, "inverseCTM");
+    glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &m_sphere_inverseCTM[0][0]);
 
+    sphere->drawMesh();
 
     glUseProgram(0);
 
     glDepthFunc(GL_LEQUAL);
 
     glUseProgram(m_skyblock_shader);
-    glm::mat4 view = glm::mat4(glm::mat3(cam->getViewMatrix()));
+    glm::mat4 view = cam->getViewMatrix();//glm::mat4(glm::mat3(cam->getViewMatrix()));
     glm::mat4 projection = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "view"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(m_skyblock_shader, "projection"), 1, GL_FALSE, &projection[0][0]);
