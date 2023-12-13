@@ -91,7 +91,7 @@ private:
     GLuint m_sphere_vao;
     GLuint m_sphere_vbo;
     std::vector<GLfloat> sphereData;
-    Emissive_S * sphere;
+    std::vector<Emissive_S *> fireflies;
 
     int lightTypeToNum(LightType light_type);
 

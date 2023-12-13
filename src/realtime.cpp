@@ -113,7 +113,8 @@ void Realtime::initializeGL() {
     this->tulip = new Tulip();
     this->lily = new Lily();
     this->rose = new Rose();
-    this->sphere = new Emissive_S(glm::vec4(0.7, 0.7, 0.7, 1.f), lights);
+    this->fireflies.push_back(new Emissive_S(glm::vec4(0.7, 0.7, 0.7, 1.f), lights));
+    this->fireflies.push_back(new Emissive_S(glm::vec4(2, 0.5, 1, 1.f), lights));
 
     this->flowerTypes = {tulip, lily, rose};
 
@@ -316,15 +317,13 @@ void Realtime::paintGL() {
     glm::vec3 origin(0, 0, 0);
     lily->drawLilies(m_shader, 0, origin);
 
-    GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
-    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &sphere->getCTM()[0][0]);
 
-    GLint inverseCTMLocation = glGetUniformLocation(m_shader, "inverseCTM");
-    glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &sphere->getiCTM()[0][0]);
 
-    sphere->passUniforms(m_shader);
+    for(int i = 0; i < this->fireflies.size(); ++ i){
+    fireflies[i]->passUniforms(m_shader);
 
-    sphere->drawMesh();
+    fireflies[i]->drawMesh();
+    }
 
     glUseProgram(0);
 

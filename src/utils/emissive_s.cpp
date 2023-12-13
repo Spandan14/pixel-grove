@@ -8,10 +8,16 @@ Emissive_S::Emissive_S(glm::vec4 location, std::vector<SceneLightData>& lights){
     glGenVertexArrays(1, &m_vao);
     this->s_light.type = LightType::LIGHT_POINT;
     this->s_light.pos = location;
-    this->s_light.color = glm::vec4(1.f, 1.f, 1.f, 1.f);
+    this->s_light.color = glm::vec4(1.f, 1.f, 0.75f, 1.f);
     this->s_light.function = glm::vec3(0.5, 0.5, 0.5);
 
-    sphereMaterial.cEmissive = glm::vec4(1.f);
+    this->CTM = glm::mat4(1.f, 0.f, 0.f, 0.f,
+                          0.f, 1.f, 0.f, 0.f,
+                          0.f, 0.f, 1.f, 0.f,
+                          this->location[0], this->location[1], this->location[2], 1.f);
+    this->iCTM = glm::transpose(glm::inverse(glm::mat3(CTM)));
+
+    sphereMaterial.cEmissive = glm::vec4(1.f, 1.f, 0.75f, 1.f);
     sphereMaterial.emissive = true;
     sphereMaterial.cAmbient = glm::vec4(1.f);
     sphereMaterial.cDiffuse = glm::vec4(0.f);
@@ -25,14 +31,11 @@ Emissive_S::Emissive_S(glm::vec4 location, std::vector<SceneLightData>& lights){
 }
 
 glm::mat4 Emissive_S::getCTM(){
-    return glm::mat4(1.f, 0.f, 0.f, 0.f,
-                    0.f, 1.f, 0.f, 0.f,
-                    0.f, 0.f, 1.f, 0.f,
-                    this->location[0], this->location[1], this->location[2], 1.f);
+    return this->CTM;
 }
 
 glm::mat3 Emissive_S::getiCTM(){
-    return glm::transpose(glm::inverse(glm::mat3(getCTM())));
+    return this->iCTM;
 }
 
 void Emissive_S::freeMesh(){
@@ -58,6 +61,12 @@ void Emissive_S::passUniforms(GLuint m_shader){
 
     GLint emisbool_l = glGetUniformLocation(m_shader, "emisbool");
     glUniform1i(emisbool_l, sphereMaterial.emissive);
+
+    GLint modelLocation = glGetUniformLocation(m_shader, "modelMatrix");
+    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &CTM[0][0]);
+
+    GLint inverseCTMLocation = glGetUniformLocation(m_shader, "inverseCTM");
+    glUniformMatrix3fv(inverseCTMLocation, 1, GL_FALSE, &iCTM[0][0]);
 }
 
 void Emissive_S::drawMesh(){

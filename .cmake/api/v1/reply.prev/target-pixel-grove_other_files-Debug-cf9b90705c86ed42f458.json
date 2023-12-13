@@ -9,7 +9,8 @@
 			"_qt_internal_process_resource",
 			"qt6_add_resources",
 			"qt_add_resources",
-			"set_property"
+			"set_property",
+			"target_sources"
 		],
 		"files" : 
 		[
@@ -194,6 +195,12 @@
 				"file" : 0,
 				"line" : 1735,
 				"parent" : 28
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 86,
+				"parent" : 0
 			}
 		]
 	},
@@ -226,7 +233,9 @@
 				7,
 				8,
 				9,
-				10
+				10,
+				13,
+				14
 			]
 		},
 		{
@@ -304,6 +313,16 @@
 			"backtrace" : 29,
 			"path" : "resources/assets/t_leaf.obj",
 			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 30,
+			"path" : "resources/shaders/texture.vert",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 30,
+			"path" : "resources/shaders/texture.frag",
+			"sourceGroupIndex" : 1
 		}
 	],
 	"type" : "UTILITY"
