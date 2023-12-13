@@ -1,4 +1,4 @@
-#ifndef EMISSIVE_S_H
+/*#ifndef EMISSIVE_S_H
 #define EMISSIVE_S_H
 
 
@@ -36,3 +36,4 @@ private:
 };
 
 #endif // EMISSIVE_S_H
+*/

@@ -990,6 +990,8 @@ pixel-grove_autogen/timestamp: \
 	C:/Users/maxgu/CS1230/pixel-grove/src/settings.h \
 	C:/Users/maxgu/CS1230/pixel-grove/src/utils/aspectratiowidget/aspectratiowidget.hpp \
 	C:/Users/maxgu/CS1230/pixel-grove/src/utils/drawables.h \
+	C:/Users/maxgu/CS1230/pixel-grove/src/utils/emissive_s.cpp \
+	C:/Users/maxgu/CS1230/pixel-grove/src/utils/emissive_s.h \
 	C:/Users/maxgu/CS1230/pixel-grove/src/utils/mesh.cpp \
 	C:/Users/maxgu/CS1230/pixel-grove/src/utils/mesh.h \
 	C:/Users/maxgu/CS1230/pixel-grove/src/utils/scenedata.h \
