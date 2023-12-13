@@ -21,7 +21,7 @@ private:
     //flower
     Mesh* flower_mesh = new Mesh("resources/assets/tulip.obj");
     GLuint m_flower = flower_mesh->getVAO();
-    SceneMaterial flower_mat {SceneColor(0.98, 0.59, 0.39, 0), SceneColor(0.98, 0.59, 0.39, 0), SceneColor(0, 0,0, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    SceneMaterial flower_mat {SceneColor(0.98, 0.59, 0.39, 0), SceneColor(0.98, 0.59, 0.39, 0), SceneColor(0.2, 0.2,0.2, 1), 0.25, SceneColor(0, 0, 0, 0)};
     SceneMaterial flower_mat_2 {SceneColor(1, 0.71, 0.76, 0), SceneColor(1, 0.71, 0.76, 0), SceneColor(0, 0,0, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     //leaf

@@ -21,12 +21,12 @@ private:
     //flower
     Mesh* flower_mesh = new Mesh("resources/assets/tulip.obj");
     GLuint m_flower = flower_mesh->getVAO();
-    SceneMaterial flower_mat {SceneColor(0.8, 0, 0, 0), SceneColor(0.8, 0, 0, 0), SceneColor(0, 0,0, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    SceneMaterial flower_mat {SceneColor(0.8, 0, 0, 0), SceneColor(0.8, 0, 0, 0), SceneColor(0.2, 0.2,0.2, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     //leaf
     Mesh* leaf_mesh = new Mesh("resources/assets/t_leaf.obj");
     GLuint m_leaf = leaf_mesh->getVAO();
-    SceneMaterial leaf_mat {SceneColor(0, 0.8, 0, 0), SceneColor(0, 0.8, 0, 0), SceneColor(0.7, 0.7, 0.7, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    SceneMaterial leaf_mat {SceneColor(0, 0.6, 0.2, 0), SceneColor(0, 0.6, 0.2, 0), SceneColor(0.7, 0.7, 0.7, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     //stem
     float radius = 0.01;
@@ -34,7 +34,7 @@ private:
     float decay = 0.7;
     Stem* rose_stem = new Stem(height, radius);
     GLuint m_stem = rose_stem->getVAO();
-    SceneMaterial stem_mat {SceneColor(0.2, 0.88, 0.2, 0), SceneColor(0.2, 0.88, 0.2, 0), SceneColor(0.5, 0.5, 0.5, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    SceneMaterial stem_mat {SceneColor(0, 0.6, 0.2, 0), SceneColor(0, 0.6, 0.2, 0), SceneColor(0.5, 0.5, 0.5, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     glm::mat4 f_step =   glm::mat4(1.0, 0.0, 0.0, 0.0,
                                  0.0, 1.0, 0.0, 0.0,

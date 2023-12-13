@@ -233,10 +233,18 @@ void Realtime::paintGL() {
 
     GLint lightType_Location = glGetUniformLocation(m_shader, "lightType[0]");
     glUniform1i(lightType_Location, lightTypeToNum(light.type));
-    for(int i = 0; i < 100; ++i){
-        for(int j = 0; j<10; ++j){
-            glm::vec3 newloc = glm::vec3(i * 0.2, 0, j * 0.2);
+    for(int i = 0; i < 25; ++i){
+        for(int j = 0; j<25; ++j){
+            glm::vec3 newloc = glm::vec3(i * 0.4, 0, j * 0.4);
+            if((i * 2)%3 == 0){
             this->lily->drawLilies(m_shader, 0, newloc);
+            }
+            else if((i * 2)%3 == 1){
+            this->rose->drawRoses(m_shader, 0, newloc);
+            }
+            else{
+            this->tulip->drawTulips(m_shader, j%2, newloc);
+            }
         }
     }
 

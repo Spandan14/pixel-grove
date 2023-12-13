@@ -58,6 +58,7 @@ add_executable(${PROJECT_NAME}
 
   src/utils/stem.h src/utils/stem.cpp
   src/utils/drawables.h
+  src/utils/emissive_s.h src/utils/emissive_s.cpp
 
 )
 

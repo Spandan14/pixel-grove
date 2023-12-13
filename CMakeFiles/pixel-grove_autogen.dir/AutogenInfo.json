@@ -426,6 +426,12 @@
 			null
 		],
 		[
+			"C:/Users/maxgu/CS1230/pixel-grove/src/utils/emissive_s.h",
+			"MU",
+			"VSCBVMNR7M/moc_emissive_s.cpp",
+			null
+		],
+		[
 			"C:/Users/maxgu/CS1230/pixel-grove/src/utils/mesh.h",
 			"MU",
 			"VSCBVMNR7M/moc_mesh.cpp",
@@ -559,6 +565,11 @@
 		[ "C:/Users/maxgu/CS1230/pixel-grove/src/mainwindow.cpp", "MU", null ],
 		[ "C:/Users/maxgu/CS1230/pixel-grove/src/realtime.cpp", "MU", null ],
 		[ "C:/Users/maxgu/CS1230/pixel-grove/src/settings.cpp", "MU", null ],
+		[
+			"C:/Users/maxgu/CS1230/pixel-grove/src/utils/emissive_s.cpp",
+			"MU",
+			null
+		],
 		[ "C:/Users/maxgu/CS1230/pixel-grove/src/utils/mesh.cpp", "MU", null ],
 		[
 			"C:/Users/maxgu/CS1230/pixel-grove/src/utils/sceneparser.cpp",

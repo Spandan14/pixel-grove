@@ -20,7 +20,7 @@ private:
     //flower
     Mesh* flower_mesh = new Mesh("resources/assets/tulip.obj");
     GLuint m_flower = flower_mesh->getVAO();
-    SceneMaterial flower_mat {SceneColor(0.98, 0.98, 0.8, 0), SceneColor(0.98, 0.98, 0.8, 0), SceneColor(0, 0,0, 1), 0.25, SceneColor(0, 0, 0, 0)};
+    SceneMaterial flower_mat {SceneColor(0.98, 0.98, 0.8, 0), SceneColor(0.98, 0.98, 0.8, 0), SceneColor(0.2, 0.2,0.2, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     //leaf
     Mesh* leaf_mesh = new Mesh("resources/assets/t_leaf.obj");
@@ -28,8 +28,8 @@ private:
     SceneMaterial leaf_mat {SceneColor(0, 0.8, 0, 0), SceneColor(0, 0.8, 0, 0), SceneColor(0.7, 0.7, 0.7, 1), 0.25, SceneColor(0, 0, 0, 0)};
 
     //stem
-    float radius = 0.01;
-    float height = 0.1;
+    float radius = 0.005;
+    float height = 0.05;
     Stem* lily_stem = new Stem(height, radius);
     GLuint m_stem = lily_stem->getVAO();
     SceneMaterial stem_mat {SceneColor(0.45, 0.84, 0.45, 0), SceneColor(0.45, 0.84, 0.45, 0), SceneColor(0.5, 0.5, 0.5, 1), 0.25, SceneColor(0, 0, 0, 0)};
@@ -43,7 +43,7 @@ private:
     std::vector<L_node *> lilies;
     L_node * premise();
     L_node * rule1(int number = 1);
-    L_node * rule2(int number, L_node * next);
+    L_node * rule2(int number, L_node * next, bool start = true);
 
     //turning angles
     float angle = 2 * M_PI/3;

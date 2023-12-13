@@ -5,6 +5,8 @@ C:/Users/maxgu/CS1230/pixel-grove/src/flowergen/tulip.h
 C:/Users/maxgu/CS1230/pixel-grove/src/main.cpp
 C:/Users/maxgu/CS1230/pixel-grove/src/flowergen/lily.h
 C:/Users/maxgu/CS1230/pixel-grove/src/flowergen/rose.h
+C:/Users/maxgu/CS1230/pixel-grove/src/realtime.h
+C:/Users/maxgu/CS1230/pixel-grove/src/flowergen/lily.cpp
 C:/Users/maxgu/CS1230/pixel-grove/src/mainwindow.h
  mmc:Q_OBJECT
  mdp:C:/Users/maxgu/CS1230/pixel-grove/src/mainwindow.h
@@ -800,8 +802,6 @@ C:/Users/maxgu/CS1230/pixel-grove/src/mainwindow.h
  mdp:C:/Users/maxgu/CS1230/pixel-grove/src/utils/scenedata.h
  mdp:C:/Users/maxgu/CS1230/pixel-grove/src/utils/sceneparser.h
  mdp:C:/Users/maxgu/CS1230/pixel-grove/src/utils/stem.h
-C:/Users/maxgu/CS1230/pixel-grove/src/realtime.h
-C:/Users/maxgu/CS1230/pixel-grove/src/flowergen/lily.cpp
 C:/Users/maxgu/CS1230/pixel-grove/src/flowergen/sunflower.h
 C:/Users/maxgu/CS1230/pixel-grove/src/settings.h
 C:/Users/maxgu/CS1230/pixel-grove/src/utils/drawables.h
