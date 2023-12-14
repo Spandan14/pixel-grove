@@ -13,7 +13,7 @@ uniform vec4 cameraPos;
 uniform sampler2D rocks_texture;
 uniform sampler2D sandgrass_texture;
 
-float k_a = 0.1;
+float k_a = 0.25;
 vec4 c_ambient = vec4(0.2, 0.2, 0.2, 1.0);
 float k_d = 0.7;
 vec4 c_diffuse = vec4(0.2, 0.2, 0.8, 1.0);

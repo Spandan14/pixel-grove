@@ -154,24 +154,24 @@ void MainWindow::initialize() {
     xScaleSlider = new QSlider(Qt::Orientation::Horizontal); // Near plane slider
     xScaleSlider->setTickInterval(1);
     xScaleSlider->setMinimum(1);
-    xScaleSlider->setMaximum(1000);
+    xScaleSlider->setMaximum(10000);
     xScaleSlider->setValue(100);
 
     xScaleBox = new QDoubleSpinBox();
     xScaleBox->setMinimum(0.01f);
-    xScaleBox->setMaximum(10.f);
+    xScaleBox->setMaximum(100.f);
     xScaleBox->setSingleStep(0.1f);
     xScaleBox->setValue(1.0f);
 
     yScaleSlider = new QSlider(Qt::Orientation::Horizontal); // Far plane slider
     yScaleSlider->setTickInterval(1);
     yScaleSlider->setMinimum(1);
-    yScaleSlider->setMaximum(1000);
+    yScaleSlider->setMaximum(10000);
     yScaleSlider->setValue(100);
 
     yScaleBox = new QDoubleSpinBox();
     yScaleBox->setMinimum(0.01f);
-    yScaleBox->setMaximum(10.f);
+    yScaleBox->setMaximum(100.f);
     yScaleBox->setSingleStep(0.1f);
     yScaleBox->setValue(1.0f);
 

@@ -55,6 +55,8 @@ public:
     void nodeDFS(LSystemNode *flower_data, std::vector<FlowerData> &to_render, glm::mat4 ctm = glm::mat4{1.0});
 
     static FlowerCTMCollection collectCTMs(std::vector<FlowerData> &objects);
+
+    static FlowerCTMCollection extendFlowerCTMCollection(FlowerCTMCollection collection, std::vector<glm::mat4> worldCTMs);
 };
 
 

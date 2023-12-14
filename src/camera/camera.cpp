@@ -110,7 +110,7 @@ glm::mat4 Camera::getProjectionMatrix() const{
 }
 
 glm::mat4 Camera::getScalingMatrix() const{
-    float far = 10.f;
+    float far = 100.f;
     float widthAngle = 2 * atan(tan(getHeightAngle() / 2) * getAspectRatio());
     return glm::mat4(1 / (far * tan(widthAngle / 2.f)), 0.f, 0.f, 0.f,
                      0.f, 1 / (far * glm::tan(getHeightAngle() / 2.f)), 0.f , 0.f,
@@ -119,7 +119,7 @@ glm::mat4 Camera::getScalingMatrix() const{
 }
 
 glm::mat4 Camera::getUnhingingMatrix() const{
-    float c = -0.01f; // OVERRIDE for now
+    float c = -0.001f; // OVERRIDE for now
     return glm::mat4(1.f, 0.f, 0.f, 0.f,
                      0.f, 1.f, 0.f, 0.f,
                      0.f, 0.f, 1.f / (1 + c), -1.f,

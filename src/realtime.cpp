@@ -240,37 +240,16 @@ void Realtime::setupFlowers() {
     glUseProgram(m_flower_shader);
 
     GLint ka_Location = glGetUniformLocation(m_flower_shader, "k_a");
-    glUniform1f(ka_Location, 0.5);
+    glUniform1f(ka_Location, 0.25);
 
     GLint kd_Location = glGetUniformLocation(m_flower_shader, "k_d");
     glUniform1f(kd_Location, 0.7);
 
     GLint ks_Location = glGetUniformLocation(m_flower_shader, "k_s");
-    glUniform1f(ks_Location, 0.54);
+    glUniform1f(ks_Location, 0.3);
 
     GLint timeofdayObj = glGetUniformLocation(m_flower_shader, "timeofday");
     glUniform1f(timeofdayObj, (float) settings.timeOfDay);;
-
-    SceneLightData light{};
-    // TODO REPLACE WITH DIRECTIONAL LIGHT FROM TIMEOFDAY
-    light.type = LightType::LIGHT_DIRECTIONAL;
-    light.pos = glm::vec4(1.f, 1.f, 1.f, 1.f);
-    light.dir = glm::vec4(0.25, -1, -1, 0.f);
-    light.color = glm::vec4(0.5f, 0.5f, 0.5f, 1);
-    GLint lightsNum_Location = glGetUniformLocation(m_flower_shader, "lightsNum");
-    glUniform1i(lightsNum_Location, 1);
-
-    GLint lightPos_Location = glGetUniformLocation(m_flower_shader, "worldLightPos[0]");
-    glUniform4f(lightPos_Location, light.pos[0], light.pos[1], light.pos[2], light.pos[3]);
-
-    GLint lightDir_Location = glGetUniformLocation(m_flower_shader, "worldLightDir[0]");
-    glUniform4f(lightDir_Location, light.dir[0], light.dir[1], light.dir[2], light.dir[3]);
-
-    GLint lightColor_Location = glGetUniformLocation(m_flower_shader, "worldLightCol[0]");
-    glUniform4f(lightColor_Location, light.color[0], light.color[1], light.color[2], light.color[3]);
-
-    GLint lightType_Location = glGetUniformLocation(m_flower_shader, "lightType[0]");
-    glUniform1i(lightType_Location, lightTypeToNum(light.type));
 
     glGenVertexArrays(1, &m_flower_vao);
 
@@ -382,6 +361,32 @@ void Realtime::drawFlowerComponent(std::vector<float> component_tris, std::vecto
 void Realtime::paintFlowers() {
     glUseProgram(m_flower_shader);
 
+    SceneLightData light{};
+    // TODO REPLACE WITH DIRECTIONAL LIGHT FROM TIMEOFDAY
+    light.type = LightType::LIGHT_DIRECTIONAL;
+
+    float lightAngle = settings.timeOfDay * 2 * M_PI / 24.f;
+    light.pos = glm::vec4(1.f, glm::sin(lightAngle), glm::cos(lightAngle), 1.f);
+    light.dir = glm::vec4(glm::normalize(glm::vec3(-light.pos)), 0.f);
+    light.color = glm::vec4(0.5f, 0.5f, 0.5f, 1);
+
+    GLint lightsNum_Location = glGetUniformLocation(m_flower_shader, "lightsNum");
+    glUniform1i(lightsNum_Location, 1);
+
+    GLint lightPos_Location = glGetUniformLocation(m_flower_shader, "worldLightPos[0]");
+    glUniform4f(lightPos_Location, light.pos[0], light.pos[1], light.pos[2], light.pos[3]);
+
+    GLint lightDir_Location = glGetUniformLocation(m_flower_shader, "worldLightDir[0]");
+    glUniform4f(lightDir_Location, light.dir[0], light.dir[1], light.dir[2], light.dir[3]);
+
+    GLint lightColor_Location = glGetUniformLocation(m_flower_shader, "worldLightCol[0]");
+    glUniform4f(lightColor_Location, light.color[0], light.color[1], light.color[2], light.color[3]);
+
+    GLint lightType_Location = glGetUniformLocation(m_flower_shader, "lightType[0]");
+    glUniform1i(lightType_Location, lightTypeToNum(light.type));
+
+
+
     GLint camPosLocation = glGetUniformLocation(m_flower_shader, "worldCameraPos");
     glm::vec4 camPos = m_camera.getCameraPos();
     glUniform4f(camPosLocation, camPos[0], camPos[1], camPos[2], camPos[3]);
@@ -395,12 +400,22 @@ void Realtime::paintFlowers() {
     Lily *lily = new Lily();
     FlowerCTMCollection lily_ctms = Flower::collectCTMs(lily->flowerData);
 
-    drawFlowerComponent(Lily::LILY_FLOWER_MESH->getTriangles(), lily_ctms.flowerCTMs,
-                        lily_ctms.flowerInverseCTMS, lily_ctms.flowerMats);
-    drawFlowerComponent(Lily::LILY_STEM_MESH->getTriangles(), lily_ctms.stemCTMs,
-                        lily_ctms.stemInverseCTMS, lily_ctms.stemMats);
-    drawFlowerComponent(Lily::LILY_LEAF_MESH->getTriangles(), lily_ctms.leafCTMs,
-                        lily_ctms.leafInverseCTMS, lily_ctms.leafMats);
+    std::vector<glm::mat4> translatedCTMs;
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            translatedCTMs.push_back(glm::translate(glm::mat4(1.f), glm::vec3(i * 0.25, 0, j * 0.25)));
+        }
+    }
+
+    FlowerCTMCollection many_flowers = Flower::extendFlowerCTMCollection(lily_ctms, translatedCTMs);
+
+
+    drawFlowerComponent(Lily::LILY_FLOWER_MESH->getTriangles(), many_flowers.flowerCTMs,
+                        many_flowers.flowerInverseCTMS, many_flowers.flowerMats);
+    drawFlowerComponent(Lily::LILY_STEM_MESH->getTriangles(), many_flowers.stemCTMs,
+                        many_flowers.stemInverseCTMS, many_flowers.stemMats);
+    drawFlowerComponent(Lily::LILY_LEAF_MESH->getTriangles(), many_flowers.leafCTMs,
+                        many_flowers.leafInverseCTMS, many_flowers.leafMats);
 
     glUseProgram(0);
 }

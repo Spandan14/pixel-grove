@@ -86,3 +86,24 @@ FlowerCTMCollection Flower::collectCTMs(std::vector<FlowerData> &objects) {
     }
     return collection;
 }
+
+FlowerCTMCollection Flower::extendFlowerCTMCollection(FlowerCTMCollection collection, std::vector<glm::mat4> worldCTMs) {
+    FlowerCTMCollection newCollection;
+    for (const auto & worldCTM : worldCTMs) {
+        for (int j = 0; j < collection.flowerCTMs.size(); j++) {
+            newCollection.flowerCTMs.push_back(worldCTM * collection.flowerCTMs[j]);
+            newCollection.flowerInverseCTMS.push_back(glm::transpose(glm::inverse(glm::mat3(worldCTM * collection.flowerCTMs[j]))));
+            newCollection.flowerMats.push_back(collection.flowerMats[j]);
+
+            newCollection.leafCTMs.push_back(worldCTM * collection.leafCTMs[j]);
+            newCollection.leafInverseCTMS.push_back(glm::transpose(glm::inverse(glm::mat3(worldCTM * collection.leafCTMs[j]))));
+            newCollection.leafMats.push_back(collection.leafMats[j]);
+
+            newCollection.stemCTMs.push_back(worldCTM * collection.stemCTMs[j]);
+            newCollection.stemInverseCTMS.push_back(glm::transpose(glm::inverse(glm::mat3(worldCTM * collection.stemCTMs[j]))));
+            newCollection.stemMats.push_back(collection.stemMats[j]);
+        }
+    }
+
+    return newCollection;
+}
