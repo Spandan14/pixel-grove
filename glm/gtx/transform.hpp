@@ -11,7 +11,7 @@
 ///
 /// Include <glm/gtx/transform.hpp> to use the features of this extension.
 ///
-/// Add transformation matrices
+/// Add ctm matrices
 
 #pragma once
 

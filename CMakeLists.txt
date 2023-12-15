@@ -25,8 +25,34 @@ find_package(Qt6 REQUIRED COMPONENTS Gui)
 
 # Specifies .cpp and .h files to be passed to the compiler
 add_executable(${PROJECT_NAME}
-        src/main.cpp
-        # put other files here, like src/main.cpp
+      src/main.cpp
+
+      src/realtime.cpp
+      src/mainwindow.cpp
+      src/settings.cpp
+        src/utils/sceneparser.cpp
+
+      src/mainwindow.h
+      src/realtime.h
+      src/settings.h
+      src/utils/scenedata.h
+        src/utils/sceneparser.h
+      src/utils/shaderloader.h
+      src/utils/aspectratiowidget/aspectratiowidget.hpp
+        src/terrain/terrain.cpp
+        src/terrain/terrain.h
+        src/camera/camera.cpp
+        src/camera/camera.h
+        src/camera/camera.cpp
+        src/flowergen/lily.cpp
+        src/skybox/skybox_utils.h
+        src/flowergen/stem.cpp
+        src/utils/mesh.cpp
+        src/utils/emissive_s.h
+        src/utils/emissive_s.cpp
+        src/flowergen/flowers.cpp
+        src/utils/ctm_utils.h
+
 )
 
 # Specifies other files
@@ -34,11 +60,22 @@ qt_add_resources(${PROJECT_NAME} "Resources"
   PREFIX
   "/"
   FILES
-  resources/images/kitten.png
-  resources/shaders/phong.vert
-  resources/shaders/phong.frag
-  resources/shaders/texture.vert
-  resources/shaders/texture.frag
+  resources/images/back.jpg
+  resources/images/bottom.jpg
+  resources/images/front.jpg
+  resources/images/left.jpg
+  resources/images/right.jpg
+  resources/images/top.jpg
+  resources/textures/terrain-rock1.png
+  resources/textures/terrain-sandgrass1.png
+  resources/shaders/terrain.frag
+  resources/shaders/terrain.vert
+  resources/shaders/skybox.frag
+  resources/shaders/skybox.vert
+        resources/shaders/flower.frag
+        resources/shaders/flower.vert
+  resources/assets/tulip.obj
+  resources/assets/t_leaf.obj
 )
 
 # GLEW: this creates its library and allows you to `#include "GL/glew.h"`

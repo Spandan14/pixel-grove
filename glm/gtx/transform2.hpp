@@ -9,7 +9,7 @@
 ///
 /// Include <glm/gtx/transform2.hpp> to use the features of this extension.
 ///
-/// Add extra transformation matrices
+/// Add extra ctm matrices
 
 #pragma once
 
